@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 export default function LoginPage() {
   const {
     register,
-    getValues,
     handleSubmit,
     watch,
     formState: { errors },
@@ -19,24 +18,21 @@ export default function LoginPage() {
 
   const onSubmit = (data) => {
     console.log(data);
-    // Handle your form submission here (e.g., API call)
   };
 
-  // Set up a state to hold the current form values
-  const [currentValues, setCurrentValues] = useState({
+  const [data, setFormData] = useState({
     email: "",
     password: "",
     remember: false,
   });
 
-  // Use watch to subscribe to form value changes
-  const watchedValues = watch((value, { name, type }) => {
-    setCurrentValues(value); // Update the state with the latest values
+  watch((value) => {
+    setFormData(value);
   });
 
   return (
     <Card>
-      <pre>{JSON.stringify(currentValues, null, 2)}</pre>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
       <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-lg">
         <h1 className="mb-4 font-bold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-2xl dark:text-white">
           Sign in to your account
