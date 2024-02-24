@@ -1,5 +1,5 @@
 import UserModel from "./user-model.js";
-import "dotenv/config";
+import "dotenv/config.js";
 
 //Set up mongoose connection
 import mongoose from "mongoose";
