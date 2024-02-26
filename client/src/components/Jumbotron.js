@@ -14,7 +14,7 @@ export const Jumbotron = () => {
         <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
           <a
             href="https://flowbite.com/"
-            className="inline-flex items-center justify-center rounded-lg bg-[#D66B00] px-5 py-3 text-center text-base font-medium text-white hover:bg-[#DAA06D] focus:ring-4 focus:ring-[#DAA06D] dark:focus:ring-[#DAA06D]"
+            className="inline-flex items-center justify-center rounded-lg bg-[#D66B00] px-5 py-3 text-center text-base font-medium text-white hover:bg-[#E5AA70] focus:ring-4 focus:ring-[#E5AA70] dark:focus:ring-[#E5AA70]"
           >
             Start Coding
             <svg
