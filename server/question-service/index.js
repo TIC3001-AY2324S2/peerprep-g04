@@ -1,6 +1,7 @@
 import express, { query } from "express";
 import cors from "cors";
 import mongoose from "mongoose";
+import "dotenv/config.js"; //temp, move this to repo
 
 import QuestionModel from "./model/question-model.js";
 
@@ -37,6 +38,7 @@ app.get("/", (req, res, next) => {
   });
 });
 
+// C: QUESTION CREATION ENDPOINT (PLEASE MOVE TO CONTROLLER)
 app.post("/api/question", async (req, res) => {
   try {
     const question = await QuestionModel.create(req.body);
@@ -46,12 +48,25 @@ app.post("/api/question", async (req, res) => {
   }
 });
 
-mongoose
-  .connect(
-    "mongodb+srv://root:peerprepg04@questionservicedb.swlr4k6.mongodb.net/?retryWrites=true&w=majority&appName=QuestionServiceDB"
-  )
-  .then(() => {
-    console.log("Connected to QuestionServiceDB MongoDB Database");
-  });
+// R: QUESTION RETRIEVAL ENDPOINT (PLEASE MOVE TO CONTROLLER)
+
+// U: QUESTION UPDATE ENDPOINT (PLEASE MOVE TO CONTROLLER)
+
+// D: QUESTION DELETION ENDPOINT (PLEASE MOVE TO CONTROLLER)
+
+let mongoDBUri = process.env.DB_LOCAL_URI;
+console.log(process.env.DB_LOCAL_URI);
+
+mongoose.connect(mongoDBUri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+let db = mongoose.connection;
+db.on("connected", () => console.log("Question Service MongoDB Connected!"));
+db.on(
+  "error",
+  console.error.bind(console, "Question Service MongoDB connection error:")
+);
 
 export default app;
