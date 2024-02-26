@@ -5,6 +5,7 @@ import ErrorPage from "./routes/errorPage";
 import LoginPage from "./routes/loginPage";
 import HomePage from "./routes/homePage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { QuestionPage } from "./routes/questionPage";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <HomePage />,
+      },
+      {
+        path: "/question",
+        element: <QuestionPage />,
       },
     ],
   },
