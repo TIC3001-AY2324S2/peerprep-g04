@@ -6,6 +6,7 @@ import LoginPage from "./routes/loginPage";
 import HomePage from "./routes/homePage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QuestionPage } from "./routes/questionPage";
+import { AddQuestionModal } from "./components/question/addQuestionModal";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: "/question",
         element: <QuestionPage />,
+      },
+      {
+        path: "/question/add",
+        element: <AddQuestionModal />,
       },
     ],
   },

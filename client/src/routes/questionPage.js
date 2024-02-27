@@ -1,150 +1,169 @@
 import { React } from "react";
-import { Card } from "../components/Card";
-import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useCreateQuestion } from "../hooks/api/useCreateQuestion";
 
 export const QuestionPage = () => {
-  // ----------------------------------
-  // FORM SETUP
-  // ----------------------------------
-  const {
-    register,
-
-    handleSubmit,
-    formState: { errors, isValid },
-  } = useForm();
-
-  // ----------------------------------
-  // FORM VALIDATIONS
-  // ----------------------------------
-  const validation = {
-    title: {
-      required: "Title is required",
-    },
-    category: {
-      required: "Category is required",
-    },
-    complexity: {
-      required: "Complexity is required",
-    },
-    description: {
-      required: "Description is required",
-    },
-  };
-
-  // ----------------------------------
-  // TODO: ON SUBMIT HOOK
-  // ----------------------------------
-  const { mutateAsync: createQuestion } = useCreateQuestion();
-
-  const onSubmit = async (data) => {
-    await createQuestion(data);
-  };
-
   return (
-    <section className="bg-white dark:bg-gray-900">
-      <div className="py-8 px-4 mx-auto max-w-2xl lg:py-16">
-        <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
-          Add a new question
-        </h2>
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
-            <div className="sm:col-span-2">
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Question Title
-              </label>
-              <input
-                type="text"
-                name="title"
-                id="title"
-                className={`block w-full rounded-lg p-2.5 text-sm text-gray-900 bg-gray-50
-                        ${
-                          errors.title
-                            ? "border-red-400 focus:border-red-500 focus:ring-red-500"
-                            : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                        }`}
-                placeholder="ie: Reverse an array"
-                {...register("title", validation.title)}
-              />
-              <small className="mt-2 text-sm text-red-600 dark:text-red-500">
-                {errors?.title && errors.title.message}
-              </small>
-            </div>
-            <div className="w-full">
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Category
-              </label>
-              <input
-                type="text"
-                name="category"
-                id="category"
-                className={`block w-full rounded-lg p-2.5 text-sm text-gray-900 bg-gray-50
-                        ${
-                          errors.category
-                            ? "border-red-400 focus:border-red-500 focus:ring-red-500"
-                            : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                        }`}
-                placeholder="ie: Array"
-                {...register("category", validation.category)}
-              />
-              <small className="mt-2 text-sm text-red-600 dark:text-red-500">
-                {errors?.category && errors.category.message}
-              </small>
-            </div>
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Complexity
-              </label>
-              <select
-                id="complexity"
-                defaultValue={"Easy"}
-                className={`block w-full rounded-lg p-2.5 text-sm text-gray-900 bg-gray-50
-                        ${
-                          errors.complexity
-                            ? "border-red-400 focus:border-red-500 focus:ring-red-500"
-                            : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                        }`}
-                {...register("complexity", validation.complexity)}
-              >
-                <option value="Easy">Easy</option>
-                <option value="Medium">Medium</option>
-                <option value="Hard">Hard</option>
-              </select>
-              <small className="mt-2 text-sm text-red-600 dark:text-red-500">
-                {errors?.complexity && errors.complexity.message}
-              </small>
-            </div>
-
-            <div className="sm:col-span-2">
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Description
-              </label>
-              <textarea
-                id="description"
-                rows="8"
-                className={`block w-full rounded-lg p-2.5 text-sm text-gray-900 bg-gray-50
-                        ${
-                          errors.description
-                            ? "border-red-400 focus:border-red-500 focus:ring-red-500"
-                            : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                        }`}
-                placeholder="Your description here"
-                {...register("description", validation.description)}
-              ></textarea>
-              <small className="mt-2 text-sm text-red-600 dark:text-red-500">
-                {errors?.description && errors.description.message}
-              </small>
-            </div>
-          </div>
+    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
+        {/*THE DROP DOWN*/}
+        <Link
+          className="flex items-center space-x-3 rtl:space-x-reverse"
+          to={`/question/add`}
+        >
           <button
-            type="submit"
-            className=" mt-5 inline-flex items-center justify-center rounded-lg bg-yellow-700 px-5 py-3 text-center text-base font-medium text-white hover:bg-[#E5AA70] focus:ring-4 focus:ring-[#E5AA70] dark:focus:ring-[#E5AA70]"
+            type="button"
+            className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800"
           >
-            Add Question
+            Add New Question
           </button>
-        </form>
+        </Link>
+
+        {/* THIS IS THE SEARCH BAR */}
+        <label className="sr-only">Search</label>
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
+            <svg
+              className="w-5 h-5 text-gray-500 dark:text-gray-400"
+              aria-hidden="true"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fillRule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clipRule="evenodd"
+              ></path>
+            </svg>
+          </div>
+          <input
+            type="text"
+            id="table-search"
+            className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Search for items"
+          />
+        </div>
       </div>
-    </section>
+
+      {/* THIS IS THE TABLE */}
+      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                No.
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Product name
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Color
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Category
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Price
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <td className="w-4 p-4">Question #</td>
+              <th
+                scope="row"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                Apple MacBook Pro 17"
+              </th>
+              <td className="px-6 py-4">Silver</td>
+              <td className="px-6 py-4">Laptop</td>
+              <td className="px-6 py-4">$2999</td>
+              <td className="px-6 py-4">
+                <a
+                  href="#"
+                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                >
+                  Edit
+                </a>
+              </td>
+            </tr>
+            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <td className="w-4 p-4">Question #</td>
+              <th
+                scope="row"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                Microsoft Surface Pro
+              </th>
+              <td className="px-6 py-4">White</td>
+              <td className="px-6 py-4">Laptop PC</td>
+              <td className="px-6 py-4">$1999</td>
+              <td className="px-6 py-4">
+                <a
+                  href="#"
+                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                >
+                  Edit
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <nav
+          className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+          aria-label="Table navigation"
+        >
+          <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+            Showing{" "}
+            <span className="font-semibold text-gray-900 dark:text-white">
+              1-10
+            </span>{" "}
+            of{" "}
+            <span className="font-semibold text-gray-900 dark:text-white">
+              1000
+            </span>
+          </span>
+          <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+            <li>
+              <a
+                href="#"
+                className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              >
+                Previous
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              >
+                1
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              >
+                2
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              >
+                Next
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
   );
 };
