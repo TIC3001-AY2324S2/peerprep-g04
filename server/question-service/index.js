@@ -1,7 +1,8 @@
 import express, { query } from "express";
 import cors from "cors";
-import mongoose from "mongoose";
 import "dotenv/config.js"; //temp, move this to repo
+
+import questionRoutes from "./routes/question-service-routes.js";
 
 import QuestionModel from "./model/question-model.js";
 
@@ -31,6 +32,8 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use("/questions", questionRoutes);
+
 app.get("/", (req, res, next) => {
   console.log("Sending Greetings!");
   res.json({
@@ -47,26 +50,5 @@ app.post("/api/question", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-
-// R: QUESTION RETRIEVAL ENDPOINT (PLEASE MOVE TO CONTROLLER)
-
-// U: QUESTION UPDATE ENDPOINT (PLEASE MOVE TO CONTROLLER)
-
-// D: QUESTION DELETION ENDPOINT (PLEASE MOVE TO CONTROLLER)
-
-let mongoDBUri = process.env.DB_LOCAL_URI;
-console.log(process.env.DB_LOCAL_URI);
-
-mongoose.connect(mongoDBUri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-let db = mongoose.connection;
-db.on("connected", () => console.log("Question Service MongoDB Connected!"));
-db.on(
-  "error",
-  console.error.bind(console, "Question Service MongoDB connection error:")
-);
 
 export default app;
