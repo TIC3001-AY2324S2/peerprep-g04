@@ -4,9 +4,19 @@ import {
   findAllQuestions,
 } from "./repository.js";
 
-export async function ormCreateQuestion() {
+export async function ormCreateQuestion(
+  title,
+  description,
+  category,
+  complexity
+) {
   try {
-    const newQuestion = await createQuestion();
+    const newQuestion = await createQuestion({
+      title,
+      description,
+      category,
+      complexity,
+    });
     await newQuestion.save();
     return true;
   } catch (err) {
