@@ -10,11 +10,11 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex flex-col min-h-screen">
+      <div>
         <NavBar />
-        <main className="flex-grow">
+        <div className="flex justify-center min-h-screen">
           <Outlet />
-        </main>
+        </div>
         <Footer />
       </div>
     </QueryClientProvider>

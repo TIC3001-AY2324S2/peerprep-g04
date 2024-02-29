@@ -5,7 +5,10 @@ export const useCreateQuestion = () => {
   const queryClient = useQueryClient();
 
   const createQuestion = async (req) =>
-    await axios.post("http://localhost:3002/api/question", req);
+    await axios.post(
+      `${process.env.REACT_APP_QUESTION_API_URL}/questions`,
+      req
+    );
 
   return useMutation({
     mutationFn: (req) => createQuestion(req),

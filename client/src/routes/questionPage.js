@@ -1,27 +1,56 @@
-import { React } from "react";
-import { Link } from "react-router-dom";
+import { React, useState } from "react";
+import { Button, Modal } from "flowbite-react";
 import { useGetAllQuestionData } from "../hooks/api/useGetAllQuestions";
+import { AddQuestionModal } from "../components/question/addQuestionModal";
+
+import { Card } from "flowbite-react";
+
+function cardComponent(label, description, imageUrl) {
+  return (
+    <Card
+      href="#"
+      className="max-w-sm mt-10 mb-10"
+      style={{
+        backgroundImage: `url(${imageUrl})`,
+      }}
+    >
+      <h5 className="text-2xl font-bold tracking-tight text-white">{label}</h5>
+      <p className="font-normal text-white ">{description}</p>
+    </Card>
+  );
+}
 
 export const QuestionPage = () => {
+  const [openModal, setOpenModal] = useState(false);
+
+  function onCloseModal() {
+    setOpenModal(false);
+  }
+
   const { data, isFetching, isPending, error } = useGetAllQuestionData();
   console.log(data);
 
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <div className="w-3/4">
+      <div className="flex flex-column justify-between">
+        {cardComponent(
+          "Match with other users now",
+          "In PeerPrep, you can match with other users and work on solutions together!",
+          "https://static.vecteezy.com/system/resources/previews/001/217/210/non_2x/binary-code-background-vector.jpg"
+        )}
+        {cardComponent(
+          "Top interview questions",
+          "Here are the top questions we have collated by various companies which were used in real interviews.",
+          "https://png.pngtree.com/background/20221206/original/pngtree-digital-futuristic-binary-code-number-background-picture-image_1982388.jpg"
+        )}
+        {cardComponent(
+          "Top 10 Questions",
+          "Try out these top questions favourited by many users.",
+          "https://png.pngtree.com/thumb_back/fh260/background/20190221/ourmid/pngtree-technology-cool-background-code-image_17634.jpg"
+        )}
+      </div>
       <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
         {/*THE DROP DOWN*/}
-        <Link
-          className="flex items-center space-x-3 rtl:space-x-reverse"
-          to={`/question/add`}
-        >
-          <button
-            type="button"
-            className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800"
-          >
-            Add New Question
-          </button>
-        </Link>
-
         {/* THIS IS THE SEARCH BAR */}
         <label className="sr-only">Search</label>
         <div className="relative">
@@ -47,8 +76,16 @@ export const QuestionPage = () => {
             placeholder="Search for items"
           />
         </div>
+        <>
+          <Button onClick={() => setOpenModal(true)}>Add New Question</Button>
+          <Modal show={openModal} size="md" onClose={onCloseModal} popup>
+            <Modal.Header />
+            <Modal.Body>
+              <AddQuestionModal />
+            </Modal.Body>
+          </Modal>
+        </>
       </div>
-
       {/* THIS IS THE TABLE */}
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -91,69 +128,63 @@ export const QuestionPage = () => {
                     <td className="px-6 py-4">{item.category}</td>
                     <td className="px-6 py-4">{item.complexity}</td>
                     <td className="px-6 py-4">{item.description}</td>
-                    <td className="px-6 py-4">
-                      <a
-                        href="#"
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                      >
-                        Edit
-                      </a>
-                    </td>
+                    <td className="px-6 py-4">edit</td>
                   </tr>
                 );
               })}
           </tbody>
         </table>
-        <nav
-          className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
-          aria-label="Table navigation"
-        >
-          <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
-            Showing{" "}
-            <span className="font-semibold text-gray-900 dark:text-white">
-              1-10
-            </span>{" "}
-            of{" "}
-            <span className="font-semibold text-gray-900 dark:text-white">
-              1000
-            </span>
-          </span>
-          <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-            <li>
-              <a
-                href="#"
-                className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-              >
-                Previous
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-              >
-                1
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-              >
-                2
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-              >
-                Next
-              </a>
-            </li>
-          </ul>
-        </nav>
       </div>
+
+      <nav
+        className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+        aria-label="Table navigation"
+      >
+        <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+          Showing{" "}
+          <span className="font-semibold text-gray-900 dark:text-white">
+            1-10{" "}
+          </span>
+          of{" "}
+          <span className="font-semibold text-gray-900 dark:text-white">
+            {data && JSON.stringify(data.data.length)}
+          </span>
+        </span>
+        <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+          <li>
+            <a
+              href="#"
+              className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+            >
+              Previous
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+            >
+              1
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+            >
+              2
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+            >
+              Next
+            </a>
+          </li>
+        </ul>
+      </nav>
     </div>
   );
 };
