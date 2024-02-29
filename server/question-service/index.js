@@ -34,21 +34,4 @@ app.use((req, res, next) => {
 
 app.use("/questions", questionRoutes);
 
-app.get("/", (req, res, next) => {
-  console.log("Sending Greetings!");
-  res.json({
-    message: "Hello World from question-service",
-  });
-});
-
-// C: QUESTION CREATION ENDPOINT (PLEASE MOVE TO CONTROLLER)
-app.post("/api/question", async (req, res) => {
-  try {
-    const question = await QuestionModel.create(req.body);
-    res.status(200).json(question);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
 export default app;

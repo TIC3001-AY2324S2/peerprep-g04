@@ -3,6 +3,7 @@ import { Card } from "../components/Card";
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { Link } from "react-router-dom";
+import { Button } from "flowbite-react";
 
 export default function LoginPage() {
   // ----------------------------------
@@ -132,6 +133,9 @@ export default function LoginPage() {
           >
             Submit
           </button>
+          <div>
+            <Button>Click me</Button>
+          </div>
         </form>
         <DevTool control={control} />
       </Card>
