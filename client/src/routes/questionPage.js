@@ -1,8 +1,11 @@
 import { React } from "react";
 import { Link } from "react-router-dom";
-import { useCreateQuestion } from "../hooks/api/useCreateQuestion";
+import { useGetAllQuestionData } from "../hooks/api/useGetAllQuestions";
 
 export const QuestionPage = () => {
+  const { data, isFetching, isPending, error } = useGetAllQuestionData();
+  console.log(data);
+
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
@@ -55,16 +58,16 @@ export const QuestionPage = () => {
                 No.
               </th>
               <th scope="col" className="px-6 py-3">
-                Product name
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Color
+                Titile
               </th>
               <th scope="col" className="px-6 py-3">
                 Category
               </th>
               <th scope="col" className="px-6 py-3">
-                Price
+                Complexity
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Description
               </th>
               <th scope="col" className="px-6 py-3">
                 Action
@@ -72,46 +75,33 @@ export const QuestionPage = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <td className="w-4 p-4">Question #</td>
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Apple MacBook Pro 17"
-              </th>
-              <td className="px-6 py-4">Silver</td>
-              <td className="px-6 py-4">Laptop</td>
-              <td className="px-6 py-4">$2999</td>
-              <td className="px-6 py-4">
-                <a
-                  href="#"
-                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                >
-                  Edit
-                </a>
-              </td>
-            </tr>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <td className="w-4 p-4">Question #</td>
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Microsoft Surface Pro
-              </th>
-              <td className="px-6 py-4">White</td>
-              <td className="px-6 py-4">Laptop PC</td>
-              <td className="px-6 py-4">$1999</td>
-              <td className="px-6 py-4">
-                <a
-                  href="#"
-                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                >
-                  Edit
-                </a>
-              </td>
-            </tr>
+            {!isPending &&
+              data &&
+              data.data &&
+              data.data.map((item, index) => {
+                return (
+                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <td className="w-4 p-4">{index + 1}</td>
+                    <th
+                      scope="row"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    >
+                      {item.title}
+                    </th>
+                    <td className="px-6 py-4">{item.category}</td>
+                    <td className="px-6 py-4">{item.complexity}</td>
+                    <td className="px-6 py-4">{item.description}</td>
+                    <td className="px-6 py-4">
+                      <a
+                        href="#"
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      >
+                        Edit
+                      </a>
+                    </td>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
         <nav
