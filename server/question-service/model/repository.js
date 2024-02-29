@@ -29,14 +29,21 @@ export async function findAllQuestions() {
   return QuestionModel.find();
 }
 
-export async function updateQuestion(id) {
+export async function updateQuestion(
+  id,
+  title,
+  description,
+  category,
+  complexity
+) {
   return QuestionModel.updateOne(
     { _id: id },
     {
       $set: {
-        // username: username,
-        // email: email,
-        // password: password,
+        title: title,
+        description: description,
+        category: category,
+        complexity: complexity,
       },
     }
   );

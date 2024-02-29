@@ -1,6 +1,7 @@
 import { ormFindAllQuestions as _findAllQuestions } from "../model/question-orm.js";
 import { ormCreateQuestion as _createQuestion } from "../model/question-orm.js";
 import { ormDeleteQuestion as _deleteQuestion } from "../model/question-orm.js";
+import { ormUpdateQuestion as _updateQuestion } from "../model/question-orm.js";
 
 export async function getQuestions(req, res) {
   const response = await _findAllQuestions();
@@ -50,7 +51,46 @@ export async function createQuestion(req, res) {
   }
 }
 
-export async function updateQuestion(req, res) {}
+export async function updateQuestion(req, res) {
+  try {
+    const { id, title, description, category, complexity } = req.body;
+
+    if (id && title && description && category && complexity) {
+      const response = await _updateQuestion(
+        id,
+        title,
+        description,
+        category,
+        complexity
+      );
+
+      if (response.err) {
+        return res.status(409).json({
+          message: response.err.message,
+        });
+      } else if (!response) {
+        console.log(`question with id: ${id} not found!`);
+        return res
+          .status(404)
+          .json({ message: `Question with id: ${id} not found!` });
+      } else {
+        console.log(`Question with id: ${id} found!`);
+        return res.status(200).json({
+          message: `Updated Question Data with id: ${id}!`,
+        });
+      }
+    } else {
+      return res.status(400).json({
+        message: "Missing data",
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: "Database failure when updating question!",
+    });
+  }
+}
 
 export async function deleteQuestion(req, res) {
   try {

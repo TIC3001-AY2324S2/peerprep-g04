@@ -2,6 +2,7 @@ import {
   createQuestion,
   deleteQuestion,
   findAllQuestions,
+  updateQuestion,
 } from "./repository.js";
 
 export async function ormCreateQuestion(
@@ -40,7 +41,34 @@ export async function ormDeleteQuestion(id) {
   }
 }
 
-export async function ormUpdateQuestion() {}
+export async function ormUpdateQuestion(
+  id,
+  title,
+  description,
+  category,
+  complexity
+) {
+  try {
+    const result = await updateQuestion(
+      id,
+      title,
+      description,
+      category,
+      complexity
+    );
+    console.log(result);
+
+    // Checking if Question  Modified
+    if (result.modifiedCount === 0) {
+      return false;
+    }
+
+    return true;
+  } catch (err) {
+    console.log("ERROR: Could not update Question data");
+    return { err };
+  }
+}
 
 export async function ormFindAllQuestions() {
   try {
