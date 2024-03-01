@@ -94,10 +94,10 @@ export async function updateQuestion(req, res) {
 
 export async function deleteQuestion(req, res) {
   try {
-    const { _id } = req.body;
-    if (_id) {
-      console.log(`DELETE QUESTION: ID Obtained: ${_id}`);
-      const response = await _deleteQuestion(_id);
+    const { id } = req.body;
+    if (id) {
+      console.log(`DELETE QUESTION: ID Obtained: ${id}`);
+      const response = await _deleteQuestion(id);
       if (response.err) {
         return res
           .status(400)
@@ -105,11 +105,11 @@ export async function deleteQuestion(req, res) {
       } else if (!response) {
         return res
           .status(404)
-          .json({ message: `Question with ${_id} not found!` });
+          .json({ message: `Question with ${id} not found!` });
       } else {
         return res
           .status(200)
-          .json({ message: `Deleted question ${_id} successfully!` });
+          .json({ message: `Deleted question ${id} successfully!` });
       }
     } else {
       return res.status(400).json({

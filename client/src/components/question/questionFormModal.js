@@ -1,6 +1,7 @@
 import { React } from "react";
 import { useForm } from "react-hook-form";
 import { useCreateQuestion } from "../../hooks/api/useCreateQuestion";
+import { useEditQuestion } from "../../hooks/api/useEditQuestion";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
@@ -12,7 +13,12 @@ import {
   Modal,
 } from "flowbite-react";
 
-export const AddQuestionModal = ({ show, setOpenAddQuestionModal }) => {
+export const QuestionFormModal = ({
+  show,
+  setOpenQuestionFormModal,
+  isEdit,
+  selectedQuestion,
+}) => {
   // ----------------------------------
   // FORM VALIDATIONS - with ZOD
   // ----------------------------------
@@ -26,24 +32,50 @@ export const AddQuestionModal = ({ show, setOpenAddQuestionModal }) => {
   // ----------------------------------
   // FORM SETUP
   // ----------------------------------
+  const initialFormValues =
+    isEdit && selectedQuestion
+      ? {
+          title: selectedQuestion.title,
+          category: selectedQuestion.category,
+          complexity: selectedQuestion.complexity,
+          description: selectedQuestion.description,
+        }
+      : {
+          title: "",
+          category: "",
+          complexity: "Easy",
+          description: "",
+        };
+
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm({ resolver: zodResolver(schema) });
+    reset,
+  } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: initialFormValues,
+  });
 
   // ----------------------------------
   // SUBMIT HOOK
   // ----------------------------------
   const { mutateAsync: createQuestion } = useCreateQuestion();
+  const { mutateAsync: editQuestion } = useEditQuestion();
 
   const onSubmit = async (data) => {
-    await createQuestion(data);
-    setOpenAddQuestionModal(false);
+    if (isEdit && selectedQuestion) {
+      await editQuestion({ data, id: selectedQuestion._id });
+    } else {
+      await createQuestion(data);
+    }
+
+    setOpenQuestionFormModal(false);
+    reset();
   };
 
   const onCancel = () => {
-    setOpenAddQuestionModal(false);
+    setOpenQuestionFormModal(false);
   };
 
   // ----------------------------------
@@ -55,7 +87,7 @@ export const AddQuestionModal = ({ show, setOpenAddQuestionModal }) => {
       <Modal.Body>
         <div className="w-full">
           <h1 className="mb-4 text-2xl font-bold text-gray-900 dark:text-white">
-            Add a new question
+            {isEdit ? "Edit Question" : "Add a new question"}
           </h1>
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -131,7 +163,7 @@ export const AddQuestionModal = ({ show, setOpenAddQuestionModal }) => {
                 )}
               </div>
             </div>
-            <Button type="submit">Add Question</Button>
+            <Button type="submit">Submit</Button>
           </form>
         </div>
       </Modal.Body>

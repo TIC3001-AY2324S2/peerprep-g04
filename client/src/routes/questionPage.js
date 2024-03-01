@@ -2,15 +2,18 @@ import { React, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Modal } from "flowbite-react";
 import { useGetAllQuestionData } from "../hooks/api/useGetAllQuestions";
-import { AddQuestionModal } from "../components/question/addQuestionModal";
+import { QuestionFormModal } from "../components/question/questionFormModal";
 
 import { Card } from "flowbite-react";
 import { Dropdown } from "flowbite-react";
 import { DeleteQuestionModal } from "../components/question/deleteQuestionModal";
 
 export const QuestionPage = () => {
-  const [openAddQuestionModal, setOpenAddQuestionModal] = useState(false);
+  const [openAddQuestionFormModal, setOpenAddQuestionFormModal] =
+    useState(false);
   const [openDeleteQuestionModal, setOpenDeleteQuestionModal] = useState(false);
+  const [openEditQuestionModal, setOpenEditQuestionModal] = useState(false);
+  const [selectedQuestion, setSelectedQuestion] = useState(null);
 
   const { data, isFetching, isPending, error } = useGetAllQuestionData();
 
@@ -40,48 +43,55 @@ export const QuestionPage = () => {
           </svg>
         )}
       >
-        <Dropdown.Item>
-          <svg
-            class="w-6 h-6 text-gray-800 dark:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m14.3 4.8 2.9 2.9M7 7H4a1 1 0 0 0-1 1v10c0 .6.4 1 1 1h11c.6 0 1-.4 1-1v-4.5m2.4-10a2 2 0 0 1 0 3l-6.8 6.8L8 14l.7-3.6 6.9-6.8a2 2 0 0 1 2.8 0Z"
-            />
-          </svg>
-          Edit Question
+        <Dropdown.Item
+          onClick={() => {
+            setOpenEditQuestionModal(true);
+            setSelectedQuestion(question);
+          }}
+        >
+          <div className="flex items-center space-x-2">
+            <svg
+              class="w-6 h-6 text-gray-800 dark:text-white"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m14.3 4.8 2.9 2.9M7 7H4a1 1 0 0 0-1 1v10c0 .6.4 1 1 1h11c.6 0 1-.4 1-1v-4.5m2.4-10a2 2 0 0 1 0 3l-6.8 6.8L8 14l.7-3.6 6.9-6.8a2 2 0 0 1 2.8 0Z"
+              />
+            </svg>
+            <span>Edit Question</span>
+          </div>
         </Dropdown.Item>
-        <Dropdown.Item>
-          <svg
-            className="w-6 h-6 text-gray-800 dark:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
-            />
-          </svg>
-          <span onClick={() => setOpenDeleteQuestionModal(true)}>
-            Delete Question
-          </span>
-          <DeleteQuestionModal
-            question={question}
-            show={openDeleteQuestionModal}
-            setOpenDeleteQuestionModal={setOpenDeleteQuestionModal}
-          />
+        <Dropdown.Item
+          onClick={() => {
+            setOpenDeleteQuestionModal(true);
+            setSelectedQuestion(question);
+          }}
+        >
+          <div className="flex items-center space-x-2">
+            <svg
+              className="w-6 h-6 text-gray-800 dark:text-white"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
+              />
+            </svg>
+            <span>Delete Question</span>
+          </div>
         </Dropdown.Item>
       </Dropdown>
     );
@@ -154,12 +164,12 @@ export const QuestionPage = () => {
         </div>
         {/* ADD QUESTION BUTTON */}
         <div>
-          <Button onClick={() => setOpenAddQuestionModal(true)}>
+          <Button onClick={() => setOpenAddQuestionFormModal(true)}>
             Add New Question
           </Button>
-          <AddQuestionModal
-            show={openAddQuestionModal}
-            setOpenAddQuestionModal={setOpenAddQuestionModal}
+          <QuestionFormModal
+            show={openAddQuestionFormModal}
+            setOpenQuestionFormModal={setOpenAddQuestionFormModal}
           />
         </div>
       </div>
@@ -217,7 +227,6 @@ export const QuestionPage = () => {
           </tbody>
         </table>
       </div>
-
       <nav
         className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
         aria-label="Table navigation"
@@ -267,6 +276,23 @@ export const QuestionPage = () => {
           </li>
         </ul>
       </nav>
+
+      {openDeleteQuestionModal && (
+        <DeleteQuestionModal
+          question={selectedQuestion}
+          show={openDeleteQuestionModal}
+          setOpenDeleteQuestionModal={setOpenDeleteQuestionModal}
+        />
+      )}
+
+      {openEditQuestionModal && (
+        <QuestionFormModal
+          show={openEditQuestionModal}
+          setOpenQuestionFormModal={setOpenEditQuestionModal}
+          isEdit={true}
+          selectedQuestion={selectedQuestion}
+        />
+      )}
     </div>
   );
 };

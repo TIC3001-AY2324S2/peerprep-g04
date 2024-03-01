@@ -5,7 +5,7 @@ export const useDeleteQuestion = () => {
   const queryClient = useQueryClient();
   const deleteQuestion = async (questionId) => {
     return axios.delete(`${process.env.REACT_APP_QUESTION_API_URL}/questions`, {
-      data: { _id: questionId },
+      data: { id: questionId },
     });
   };
 

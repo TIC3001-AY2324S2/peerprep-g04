@@ -1,18 +1,21 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
-export const useCreateQuestion = () => {
+export const useEditQuestion = () => {
   const queryClient = useQueryClient();
 
-  const createQuestion = async (req) => {
-    await axios.post(
+  const editQuestion = async ({ data, id }) => {
+    return await axios.patch(
       `${process.env.REACT_APP_QUESTION_API_URL}/questions`,
-      req
+      {
+        ...data, // Spread the form data
+        id: id, // Include the ID in the body
+      }
     );
   };
 
   return useMutation({
-    mutationFn: (req) => createQuestion(req),
+    mutationFn: (req, id) => editQuestion(req, id),
     onSuccess: (_, req) => {
       queryClient.invalidateQueries(["showQuestions"]);
     },
