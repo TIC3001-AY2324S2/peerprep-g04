@@ -40,13 +40,6 @@ app.get("/", (req, res, next) => {
   });
 });
 
-// This is just to test react router
-app.get("/test", (req, res) => {
-  res.json({
-    data: "This is a test route with react",
-  });
-});
-
 // Handle When No Route Match Is Found
 app.use((req, res, next) => {
   const error = new Error("Route Not Found");

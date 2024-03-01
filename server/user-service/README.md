@@ -292,3 +292,5 @@ JWT_SECRET=you-can-replace-this-with-your-own-secret
 | 200 (OK)                    | Token Verified and Authenticated User's Data Obtained |
 | 401 (Unauthorized)          | Missing/Invalid/Expired JWT                           |
 | 500 (Internal Server Error) | Database or Server Error                              |
+
+Making a JWT Token: command -> `openssl rand -hex 64`
