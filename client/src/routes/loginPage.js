@@ -1,9 +1,8 @@
 import React from "react";
-import { Card } from "../components/Card";
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { Link } from "react-router-dom";
-import { Button } from "flowbite-react";
+import { Button, Card } from "flowbite-react";
 
 export default function LoginPage() {
   // ----------------------------------
@@ -47,11 +46,7 @@ export default function LoginPage() {
 
   return (
     <Card>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        noValidate
-        className="mx-auto max-w-lg"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="max-w-lg">
         <h1 className="mb-4 font-bold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-2xl dark:text-white">
           Sign in to your account
         </h1>

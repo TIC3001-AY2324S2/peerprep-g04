@@ -6,8 +6,6 @@ import LoginPage from "./routes/loginPage";
 import HomePage from "./routes/homePage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QuestionPage } from "./routes/questionPage";
-import { AddQuestionModal } from "./components/question/addQuestionModal";
-import { DeleteQuestionModal } from "./components/question/deleteQuestionModal";
 
 const router = createBrowserRouter([
   {
