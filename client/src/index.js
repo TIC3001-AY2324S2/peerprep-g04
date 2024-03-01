@@ -15,6 +15,10 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
+        path: "/auth",
+        element: <LoginPage />,
+      },
+      {
         index: true,
         element: <HomePage />,
       },
@@ -27,10 +31,6 @@ const router = createBrowserRouter([
         element: <AddQuestionModal />,
       },
     ],
-  },
-  {
-    path: "/auth",
-    element: <LoginPage />,
   },
 ]);
 

@@ -36,9 +36,9 @@ export const AddQuestionModal = () => {
 
   return (
     <div className="w-full">
-      <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
+      <h1 className="mb-4 text-2xl font-bold text-gray-900 dark:text-white">
         Add a new question
-      </h2>
+      </h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
         noValidate

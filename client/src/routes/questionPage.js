@@ -5,32 +5,101 @@ import { useGetAllQuestionData } from "../hooks/api/useGetAllQuestions";
 import { AddQuestionModal } from "../components/question/addQuestionModal";
 
 import { Card } from "flowbite-react";
-
-function cardComponent(label, description, imageUrl) {
-  return (
-    <Card
-      href="#"
-      className="max-w-sm mt-10 mb-10"
-      style={{
-        backgroundImage: `url(${imageUrl})`,
-      }}
-    >
-      <h5 className="text-2xl font-bold tracking-tight text-white">{label}</h5>
-      <p className="font-normal text-white ">{description}</p>
-    </Card>
-  );
-}
+import { Dropdown } from "flowbite-react";
 
 export const QuestionPage = () => {
   const [openModal, setOpenModal] = useState(false);
+  const { data, isFetching, isPending, error } = useGetAllQuestionData();
+  console.log(data);
+
+  // ----------------------------------
+  // RENDER COMPONENTS
+  // ----------------------------------
+  const actionButton = () => {
+    return (
+      <Dropdown
+        label=""
+        dismissOnClick={false}
+        renderTrigger={() => (
+          <svg
+            className="w-6 h-6 text-gray-800 dark:text-white"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeWidth="2"
+              d="M12 6h0m0 6h0m0 6h0"
+            />
+          </svg>
+        )}
+      >
+        <Dropdown.Item>
+          <svg
+            class="w-6 h-6 text-gray-800 dark:text-white"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m14.3 4.8 2.9 2.9M7 7H4a1 1 0 0 0-1 1v10c0 .6.4 1 1 1h11c.6 0 1-.4 1-1v-4.5m2.4-10a2 2 0 0 1 0 3l-6.8 6.8L8 14l.7-3.6 6.9-6.8a2 2 0 0 1 2.8 0Z"
+            />
+          </svg>
+          Edit Question
+        </Dropdown.Item>
+        <Dropdown.Item>
+          <svg
+            className="w-6 h-6 text-gray-800 dark:text-white"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
+            />
+          </svg>
+          Delete Question
+        </Dropdown.Item>
+      </Dropdown>
+    );
+  };
+
+  const cardComponent = (label, description, imageUrl) => {
+    return (
+      <Card
+        href="#"
+        className="max-w-sm mt-10 mb-10"
+        style={{
+          backgroundImage: `url(${imageUrl})`,
+        }}
+      >
+        <h5 className="text-2xl font-bold tracking-tight text-white">
+          {label}
+        </h5>
+        <p className="font-normal text-white ">{description}</p>
+      </Card>
+    );
+  };
 
   function onCloseModal() {
     setOpenModal(false);
   }
-
-  const { data, isFetching, isPending, error } = useGetAllQuestionData();
-  console.log(data);
-
+  // ----------------------------------
+  // RETURN BLOCK
+  // ----------------------------------
   return (
     <div className="w-3/4 max-w-7xl">
       <div className="flex flex-column justify-between">
@@ -51,8 +120,7 @@ export const QuestionPage = () => {
         )}
       </div>
       <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
-        {/*THE DROP DOWN*/}
-        {/* THIS IS THE SEARCH BAR */}
+        {/* SEARCH BAR */}
         <label className="sr-only">Search</label>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
@@ -77,7 +145,8 @@ export const QuestionPage = () => {
             placeholder="Search for items"
           />
         </div>
-        <>
+        {/* ADD QUESTION BUTTON */}
+        <div>
           <Button onClick={() => setOpenModal(true)}>Add New Question</Button>
           <Modal show={openModal} size="4xl" onClose={onCloseModal} popup>
             <Modal.Header />
@@ -85,9 +154,9 @@ export const QuestionPage = () => {
               <AddQuestionModal />
             </Modal.Body>
           </Modal>
-        </>
+        </div>
       </div>
-      {/* THIS IS THE TABLE */}
+      {/* TABLE */}
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -134,7 +203,7 @@ export const QuestionPage = () => {
                     <td className="px-6 py-4">{item.category}</td>
                     <td className="px-6 py-4">{item.complexity}</td>
                     <td className="px-6 py-4">{item.description}</td>
-                    <td className="px-6 py-4">edit</td>
+                    <td className="px-6 py-4">{actionButton()}</td>
                   </tr>
                 );
               })}
