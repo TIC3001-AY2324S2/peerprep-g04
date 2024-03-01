@@ -32,7 +32,7 @@ export const QuestionPage = () => {
   console.log(data);
 
   return (
-    <div className="w-3/4">
+    <div className="w-3/4 max-w-7xl">
       <div className="flex flex-column justify-between">
         {cardComponent(
           "Match with other users now",
