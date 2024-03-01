@@ -6,16 +6,19 @@ import { AddQuestionModal } from "../components/question/addQuestionModal";
 
 import { Card } from "flowbite-react";
 import { Dropdown } from "flowbite-react";
+import { DeleteQuestionModal } from "../components/question/deleteQuestionModal";
 
 export const QuestionPage = () => {
-  const [openModal, setOpenModal] = useState(false);
+  const [openAddQuestionModal, setOpenAddQuestionModal] = useState(false);
+  const [openDeleteQuestionModal, setOpenDeleteQuestionModal] = useState(false);
+
   const { data, isFetching, isPending, error } = useGetAllQuestionData();
-  console.log(data);
 
   // ----------------------------------
   // RENDER COMPONENTS
   // ----------------------------------
-  const actionButton = () => {
+
+  const actionButton = (question) => {
     return (
       <Dropdown
         label=""
@@ -71,7 +74,14 @@ export const QuestionPage = () => {
               d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
             />
           </svg>
-          Delete Question
+          <span onClick={() => setOpenDeleteQuestionModal(true)}>
+            Delete Question
+          </span>
+          <DeleteQuestionModal
+            question={question}
+            show={openDeleteQuestionModal}
+            setOpenDeleteQuestionModal={setOpenDeleteQuestionModal}
+          />
         </Dropdown.Item>
       </Dropdown>
     );
@@ -94,9 +104,6 @@ export const QuestionPage = () => {
     );
   };
 
-  function onCloseModal() {
-    setOpenModal(false);
-  }
   // ----------------------------------
   // RETURN BLOCK
   // ----------------------------------
@@ -147,13 +154,13 @@ export const QuestionPage = () => {
         </div>
         {/* ADD QUESTION BUTTON */}
         <div>
-          <Button onClick={() => setOpenModal(true)}>Add New Question</Button>
-          <Modal show={openModal} size="4xl" onClose={onCloseModal} popup>
-            <Modal.Header />
-            <Modal.Body>
-              <AddQuestionModal />
-            </Modal.Body>
-          </Modal>
+          <Button onClick={() => setOpenAddQuestionModal(true)}>
+            Add New Question
+          </Button>
+          <AddQuestionModal
+            show={openAddQuestionModal}
+            setOpenAddQuestionModal={setOpenAddQuestionModal}
+          />
         </div>
       </div>
       {/* TABLE */}
@@ -203,7 +210,7 @@ export const QuestionPage = () => {
                     <td className="px-6 py-4">{item.category}</td>
                     <td className="px-6 py-4">{item.complexity}</td>
                     <td className="px-6 py-4">{item.description}</td>
-                    <td className="px-6 py-4">{actionButton()}</td>
+                    <td className="px-6 py-4">{actionButton(item)}</td>
                   </tr>
                 );
               })}
