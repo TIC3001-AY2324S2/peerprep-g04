@@ -10,9 +10,9 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div>
+      <div className="flex flex-col min-h-screen">
         <NavBar />
-        <div className="flex justify-center">
+        <div className="flex flex-grow justify-center">
           <Outlet />
         </div>
         <div className="mt-5">

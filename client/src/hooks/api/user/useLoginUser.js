@@ -3,14 +3,8 @@ import axios from "axios";
 
 export const useLoginUser = () => {
   const queryClient = useQueryClient();
-  const loginUser = async (credentials) => {
-    return axios.post(`${process.env.REACT_APP_USER_API_URL}/auth/login`, {
-      data: {
-        username: "SampleUserName",
-        email: "sample@gmail.com",
-        password: "SecurePassword",
-      },
-    });
+  const loginUser = async (req) => {
+    return axios.post(`${process.env.REACT_APP_USER_API_URL}/auth/login`, req);
   };
 
   return useMutation({

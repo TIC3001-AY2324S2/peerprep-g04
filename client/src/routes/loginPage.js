@@ -39,8 +39,14 @@ export default function LoginPage() {
   // ----------------------------------
   const { mutateAsync: loginUser } = useLoginUser();
   const onSubmit = async (data) => {
-    await loginUser(data);
-    console.log(data);
+    try {
+      await loginUser(data);
+      // Handle successful login, e.g., redirect to a different page or show a success message
+    } catch (error) {
+      // Handle errors, e.g., show an error message to the user
+      console.error("Login error:", error.response.data.message);
+      // You might want to set an error state here and display it in the UI
+    }
   };
 
   return (
