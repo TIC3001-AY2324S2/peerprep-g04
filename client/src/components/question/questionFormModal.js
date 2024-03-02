@@ -1,7 +1,7 @@
 import { React } from "react";
 import { useForm } from "react-hook-form";
-import { useCreateQuestion } from "../../hooks/api/useCreateQuestion";
-import { useEditQuestion } from "../../hooks/api/useEditQuestion";
+import { useCreateQuestion } from "../../hooks/api/question/useCreateQuestion";
+import { useEditQuestion } from "../../hooks/api/question/useEditQuestion";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {

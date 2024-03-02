@@ -1,5 +1,5 @@
 import { Button, Modal } from "flowbite-react";
-import { useDeleteQuestion } from "../../hooks/api/useDeleteQuestion";
+import { useDeleteQuestion } from "../../hooks/api/question/useDeleteQuestion";
 
 export const DeleteQuestionModal = ({
   show,

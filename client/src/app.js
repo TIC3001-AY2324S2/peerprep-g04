@@ -1,7 +1,7 @@
 import "./styles/input.css";
 import { NavBar } from "./components/common/NavBar";
 import { Outlet } from "react-router-dom";
-import { Footer } from "./components/common/Footer";
+import { CustomFooter } from "./components/common/Footer";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -12,10 +12,12 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <div>
         <NavBar />
-        <div className="flex justify-center min-h-screen">
+        <div className="flex justify-center">
           <Outlet />
         </div>
-        <Footer />
+        <div className="mt-5">
+          <CustomFooter />
+        </div>
       </div>
     </QueryClientProvider>
   );
