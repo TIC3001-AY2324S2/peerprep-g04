@@ -20,7 +20,12 @@ export function verifyAccessToken(req, res, next) {
       return res.status(401).json({ message: "Authentication failed" });
     }
 
-    req.user = { id: dbUser.id, username: dbUser.username, email: dbUser.email, isAdmin: dbUser.isAdmin };
+    req.user = {
+      id: dbUser.id,
+      username: dbUser.username,
+      email: dbUser.email,
+      isAdmin: dbUser.isAdmin,
+    };
     next();
   });
 }
@@ -29,7 +34,9 @@ export function verifyIsAdmin(req, res, next) {
   if (req.user.isAdmin) {
     next();
   } else {
-    return res.status(403).json({ message: "Not authorized to access this resource" });
+    return res
+      .status(403)
+      .json({ message: "Not authorized to access this resource" });
   }
 }
 
@@ -38,13 +45,22 @@ export function verifyEmail(req, res, next) {
     return next();
   }
 
-  const userEmailFromBody = req.body.email;
+  const userEmail = req.body.email ? req.body.email : req.query.email;
+
+  console.log("THIS IS THE USER EMAIL: " + userEmail);
+
   const userEmailFromToken = req.user.email;
-  if (userEmailFromBody === userEmailFromToken) {
+
+  console.log("COMPARE WITH: " + userEmailFromToken);
+
+  console.log("RESULT: " + (userEmail === userEmailFromToken));
+  if (userEmail === userEmailFromToken) {
     return next();
   }
 
-  return res.status(403).json({ message: "Not authorized to access this resource" });
+  return res
+    .status(403)
+    .json({ message: "Not authorized to access this resource" });
 }
 
 export function verifyId(req, res, next) {
@@ -58,5 +74,7 @@ export function verifyId(req, res, next) {
     return next();
   }
 
-  return res.status(403).json({ message: "Not authorized to access this resource" });
+  return res
+    .status(403)
+    .json({ message: "Not authorized to access this resource" });
 }

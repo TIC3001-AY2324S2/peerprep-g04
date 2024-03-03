@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { redirect } from "react-router-dom";
 import { useAuth } from "../../../components/common/AuthProvider";
 
 export const useLoginUser = () => {
   const { login } = useAuth();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const loginUser = async (req) => {
     const response = await axios.post(
@@ -18,15 +18,29 @@ export const useLoginUser = () => {
 
   return useMutation({
     mutationFn: (req) => loginUser(req),
-    onSuccess: (data, req) => {
+    onSuccess: async (data, req) => {
       const { accessToken } = data;
-      const email = req.email;
-      login(accessToken, email);
-      queryClient.invalidateQueries(["userLogin"]);
-      redirect("/");
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_USER_API_URL}/users`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+            params: {
+              email: req.email,
+            },
+          }
+        );
+
+        await login(accessToken, response.data);
+        await queryClient.invalidateQueries(["userLogin"]);
+        navigate("/");
+      } catch (error) {
+        console.error("Failed to fetch user details:", error);
+      }
     },
     onError: (error) => {
-      // Handle login error
       console.error("Login failed:", error);
     },
   });
