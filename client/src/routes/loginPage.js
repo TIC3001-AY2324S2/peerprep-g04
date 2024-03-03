@@ -1,6 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -8,6 +9,7 @@ import { z } from "zod";
 import { useLoginUser } from "../hooks/api/user/useLoginUser";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
   // ----------------------------------
   // FORM VALIDATIONS
   // ----------------------------------
@@ -41,11 +43,9 @@ export default function LoginPage() {
   const onSubmit = async (data) => {
     try {
       await loginUser(data);
-      // Handle successful login, e.g., redirect to a different page or show a success message
+      navigate("/");
     } catch (error) {
-      // Handle errors, e.g., show an error message to the user
       console.error("Login error:", error.response.data.message);
-      // You might want to set an error state here and display it in the UI
     }
   };
 
