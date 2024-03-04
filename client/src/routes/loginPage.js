@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../store/slices/userSlices.js";
-import { useLoginUser } from "../hooks/api/user/useLoginUser";
+import Cookies from "js-cookie";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -49,6 +49,7 @@ export default function LoginPage() {
       const actionResult = await dispatch(loginUser(data));
       const result = unwrapResult(actionResult);
       // Only navigate after a successful login
+      Cookies.set("accessToken", result.accessToken);
       navigate("/");
     } catch (error) {
       // Handle the error if login failed

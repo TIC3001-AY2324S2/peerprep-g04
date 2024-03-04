@@ -30,8 +30,7 @@ export const loginUser = createAsyncThunk(
       );
       const { accessToken } = loginResponse.data;
       const decodedJwt = parseJwt(accessToken);
-      console.log("hehe accessToken" + accessToken);
-      console.log("EMAIL: " + JSON.stringify(decodedJwt.email));
+
       // Fetch user data with the access token
       const userData = await dispatch(
         fetchUserData({ accessToken, email: decodedJwt.email })

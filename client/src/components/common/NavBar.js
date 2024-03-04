@@ -2,10 +2,8 @@
 import { React } from "react";
 import { Link } from "react-router-dom";
 import { Navbar } from "flowbite-react";
-import { useAuth } from "../common/AuthProvider";
 
 export const NavBar = () => {
-  // const { user } = useAuth();
   return (
     <div>
       <div className="mx-auto max-w-7xl">
