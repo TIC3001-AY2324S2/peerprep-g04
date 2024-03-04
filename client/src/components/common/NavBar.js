@@ -5,7 +5,7 @@ import { Navbar } from "flowbite-react";
 import { useAuth } from "../common/AuthProvider";
 
 export const NavBar = () => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
   return (
     <div>
       <div className="mx-auto max-w-7xl">
@@ -34,7 +34,7 @@ export const NavBar = () => {
                 Question
               </Link>
             </Navbar.Link>
-            {user ? (
+            {true ? (
               <Navbar.Link>
                 <Link
                   className="block rounded px-3 py-2 text-gray-900 hover:bg-gray-100 md:border-0 md:p-0 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent md:dark:hover:text-blue-500"
@@ -53,7 +53,7 @@ export const NavBar = () => {
                 </Link>
               </Navbar.Link>
             )}
-            {user && (
+            {true && (
               <Navbar.Link>
                 <Link
                   className="block rounded px-3 py-2 text-gray-900 hover:bg-gray-100 md:border-0 md:p-0 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent md:dark:hover:text-blue-500"

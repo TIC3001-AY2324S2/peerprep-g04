@@ -1,15 +1,20 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { unwrapResult } from "@reduxjs/toolkit";
 import { useNavigate } from "react-router-dom";
 import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-
+import { useDispatch } from "react-redux";
+import { loginUser } from "../store/slices/userSlices.js";
 import { useLoginUser } from "../hooks/api/user/useLoginUser";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  // dispatch and navigate
+  const dispatch = useDispatch();
+
   // ----------------------------------
   // FORM VALIDATIONS
   // ----------------------------------
@@ -39,13 +44,15 @@ export default function LoginPage() {
   // ----------------------------------
   // TODO: ON SUBMIT HOOK
   // ----------------------------------
-  const { mutateAsync: loginUser } = useLoginUser();
   const onSubmit = async (data) => {
     try {
-      await loginUser(data);
+      const actionResult = await dispatch(loginUser(data));
+      const result = unwrapResult(actionResult);
+      // Only navigate after a successful login
       navigate("/");
     } catch (error) {
-      console.error("Login error:", error.response.data.message);
+      // Handle the error if login failed
+      console.error("Failed to login: ", error);
     }
   };
 

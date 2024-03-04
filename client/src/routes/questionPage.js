@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button, Modal } from "flowbite-react";
 import { useGetAllQuestionData } from "../hooks/api/question/useGetAllQuestions";
 import { QuestionFormModal } from "../components/question/questionFormModal";
-import { useAuth } from "../components/common/AuthProvider";
+// import { useAuth } from "../components/common/AuthProvider";
 
 import { Card } from "flowbite-react";
 import { Dropdown } from "flowbite-react";
@@ -15,7 +15,7 @@ export const QuestionPage = () => {
   const [openDeleteQuestionModal, setOpenDeleteQuestionModal] = useState(false);
   const [openEditQuestionModal, setOpenEditQuestionModal] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
-  const { user } = useAuth();
+  // const { user } = useAuth();
 
   const { data, isFetching, isPending, error } = useGetAllQuestionData();
 

@@ -24,33 +24,33 @@ function parseJwt(token) {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const decodedJwt = parseJwt(Cookies.get("accessToken"));
+  // const decodedJwt = parseJwt(Cookies.get("accessToken"));
 
-  useEffect(() => {
-    const accessToken = Cookies.get("accessToken");
-    if (accessToken && decodedJwt) {
-      const fetchUserDetails = async () => {
-        try {
-          const response = await axios.get(
-            `${process.env.REACT_APP_USER_API_URL}/users`,
-            {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-              params: {
-                email: decodedJwt.email,
-              },
-            }
-          );
-          setUser(response.data);
-        } catch (error) {
-          console.error("Failed to fetch user details", error);
-        }
-      };
+  // useEffect(() => {
+  //   const accessToken = Cookies.get("accessToken");
+  //   if (accessToken && decodedJwt) {
+  //     const fetchUserDetails = async () => {
+  //       try {
+  //         const response = await axios.get(
+  //           `${process.env.REACT_APP_USER_API_URL}/users`,
+  //           {
+  //             headers: {
+  //               Authorization: `Bearer ${accessToken}`,
+  //             },
+  //             params: {
+  //               email: decodedJwt.email,
+  //             },
+  //           }
+  //         );
+  //         setUser(response.data);
+  //       } catch (error) {
+  //         console.error("Failed to fetch user details", error);
+  //       }
+  //     };
 
-      fetchUserDetails();
-    }
-  }, [decodedJwt]);
+  //     fetchUserDetails();
+  //   }
+  // }, [decodedJwt]);
 
   const login = (accessToken, userDetails) => {
     Cookies.set("accessToken", accessToken, { expires: 1 });
