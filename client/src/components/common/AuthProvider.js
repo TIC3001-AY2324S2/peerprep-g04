@@ -1,6 +1,15 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setUser, clearUser, loginUser } from "../../store/slices/userSlices";
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
@@ -23,12 +32,17 @@ function parseJwt(token) {
 }
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const decodedJwt = parseJwt(Cookies.get("accessToken"));
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.user.userObj);
+  const lastToken = useRef();
 
   useEffect(() => {
     const accessToken = Cookies.get("accessToken");
-    if (accessToken && decodedJwt) {
+    if (accessToken && accessToken !== lastToken.current) {
+      lastToken.current = accessToken;
+      const decodedJwt = parseJwt(Cookies.get("accessToken"));
+
       const fetchUserDetails = async () => {
         try {
           const response = await axios.get(
@@ -42,28 +56,32 @@ export const AuthProvider = ({ children }) => {
               },
             }
           );
-          setUser(response.data);
+          dispatch(setUser(response.data));
         } catch (error) {
           console.error("Failed to fetch user details", error);
+          dispatch(clearUser());
+          Cookies.remove("accessToken");
         }
       };
 
       fetchUserDetails();
+    } else if (!accessToken) {
+      dispatch(clearUser());
     }
-  }, [decodedJwt]);
+  }, [dispatch]);
 
-  const login = (accessToken, userDetails) => {
-    Cookies.set("accessToken", accessToken, { expires: 1 });
-    setUser(userDetails);
+  const login = (userDetails) => {
+    dispatch(loginUser(userDetails));
+    dispatch(setUser(userDetails));
   };
 
   const logout = () => {
     Cookies.remove("accessToken");
-    setUser(null);
+    dispatch(clearUser());
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ login, logout }}>
       <pre>This is my user: {JSON.stringify(user)}</pre>
       {children}
     </AuthContext.Provider>

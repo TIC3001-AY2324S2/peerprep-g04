@@ -29,6 +29,7 @@ export const loginUser = createAsyncThunk(
         userDetails
       );
       const { accessToken } = loginResponse.data;
+      Cookies.set("accessToken", accessToken, { expires: 1 });
       const decodedJwt = parseJwt(accessToken);
 
       // Fetch user data with the access token
@@ -73,6 +74,9 @@ const userSlice = createSlice({
     userObj: null,
   },
   reducers: {
+    setUser: (state, action) => {
+      state.userObj = action.payload;
+    },
     clearUser: (state) => {
       state.userObj = null;
     },
@@ -90,4 +94,4 @@ const userSlice = createSlice({
 });
 
 export default userSlice.reducer;
-export const { clearUser } = userSlice.actions;
+export const { setUser, clearUser } = userSlice.actions;

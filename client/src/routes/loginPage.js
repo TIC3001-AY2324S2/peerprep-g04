@@ -7,13 +7,14 @@ import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useDispatch } from "react-redux";
-import { loginUser } from "../store/slices/userSlices.js";
 import Cookies from "js-cookie";
+import { useAuth } from "../components/common/AuthProvider";
 
 export default function LoginPage() {
   const navigate = useNavigate();
   // dispatch and navigate
   const dispatch = useDispatch();
+  const { login } = useAuth();
 
   // ----------------------------------
   // FORM VALIDATIONS
@@ -46,10 +47,8 @@ export default function LoginPage() {
   // ----------------------------------
   const onSubmit = async (data) => {
     try {
-      const actionResult = await dispatch(loginUser(data));
-      const result = unwrapResult(actionResult);
+      login(data);
       // Only navigate after a successful login
-      Cookies.set("accessToken", result.accessToken);
       navigate("/");
     } catch (error) {
       // Handle the error if login failed
