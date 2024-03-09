@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useRef,
-} from "react";
+import React, { createContext, useContext, useEffect, useRef } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -70,9 +64,9 @@ export const AuthProvider = ({ children }) => {
     }
   }, [dispatch]);
 
-  const login = (userDetails) => {
-    dispatch(loginUser(userDetails));
-    dispatch(setUser(userDetails));
+  const login = (data) => {
+    dispatch(loginUser(data));
+    dispatch(setUser(data.userDetails));
   };
 
   const logout = () => {
@@ -81,8 +75,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ login, logout }}>
-      <pre>This is my user: {JSON.stringify(user)}</pre>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

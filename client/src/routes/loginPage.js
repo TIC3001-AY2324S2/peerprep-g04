@@ -64,7 +64,7 @@ export default function LoginPage() {
         className="flex flex-col gap-4"
       >
         <h1 className="mb-4 font-bold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-2xl dark:text-white">
-          Sign in to your account
+          Login to your account
         </h1>
         Join our community of designers and developers to get access to hundreds
         of UI components, plugins, resources, and design systems.

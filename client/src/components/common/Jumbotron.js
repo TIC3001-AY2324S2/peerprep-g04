@@ -4,13 +4,17 @@ export const Jumbotron = () => {
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className="mx-auto max-w-screen-xl px-4 py-8 text-center lg:py-16">
-        <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-          Practice coding anytime, anywhere.
+        <h1 class="mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
+          <span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+            Practice coding
+          </span>
+          <span> with friends.</span>
         </h1>
-        <p className="mb-8 text-lg font-normal text-gray-500 sm:px-16 lg:px-48 lg:text-xl dark:text-gray-400">
+        <p class="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
           Live coding collaboration, create your own questions. Work on
           solutions together with your friends.
         </p>
+        <br />
         <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
           <a
             href="https://flowbite.com/"

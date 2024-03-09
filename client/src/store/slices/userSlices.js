@@ -45,6 +45,16 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+// logoutUserThunk would be your async thunk for user LogOut action
+export const logoutUser = createAsyncThunk(
+  "user/logout",
+  async (_, { dispatch }) => {
+    Cookies.remove("accessToken"); // Remove token from cookies
+
+    return;
+  }
+);
+
 // New async thunk for fetching user data
 export const fetchUserData = createAsyncThunk(
   "user/fetchUserData",
