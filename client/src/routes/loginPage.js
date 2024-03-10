@@ -1,13 +1,10 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
-import { unwrapResult } from "@reduxjs/toolkit";
 import { useNavigate } from "react-router-dom";
 import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useDispatch } from "react-redux";
-import Cookies from "js-cookie";
 import { useAuth } from "../components/common/AuthProvider";
 
 export default function LoginPage() {
@@ -80,6 +77,7 @@ export default function LoginPage() {
             placeholder="name@flowbite.com"
             required
             color={`${errors.email ? "failure" : "gray"}`}
+            shadow
             {...register("email")}
           />
           <small className="mt-2 text-sm text-red-600 dark:text-red-500">
@@ -88,12 +86,13 @@ export default function LoginPage() {
         </div>
         <div>
           <div className="mb-2 block">
-            <Label htmlFor="password1" value="Your password" />
+            <Label htmlFor="password" value="Your password" />
           </div>
           <TextInput
-            id="password1"
+            id="password"
             type="password"
             required
+            shadow
             color={`${errors.password ? "failure" : "gray"}`}
             {...register("password")}
           />

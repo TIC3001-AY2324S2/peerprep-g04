@@ -7,6 +7,7 @@ import HomePage from "./routes/homePage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QuestionPage } from "./routes/questionPage";
 import ProfilePage from "./routes/profilePage";
+import RegisterPage from "./routes/registerPage";
 
 const router = createBrowserRouter([
   {
@@ -15,12 +16,16 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
+        index: true,
+        element: <HomePage />,
+      },
+      {
         path: "/auth",
         element: <LoginPage />,
       },
       {
-        index: true,
-        element: <HomePage />,
+        path: "/register",
+        element: <RegisterPage />,
       },
       {
         path: "/question",

@@ -1,51 +1,39 @@
 import { Jumbotron } from "../components/common/Jumbotron";
-import { Card } from "flowbite-react";
+import { Card, Carousel } from "flowbite-react";
 
 export default function HomePage() {
+  function CarouselComponent() {
+    return (
+      <div className="h-56 sm:h-64 xl:h-80 2xl:h-96">
+        <Carousel slideInterval={5000}>
+          <img
+            src="https://flowbite.com/docs/images/carousel/carousel-1.svg"
+            alt="..."
+          />
+          <img
+            src="https://flowbite.com/docs/images/carousel/carousel-2.svg"
+            alt="..."
+          />
+          <img
+            src="https://flowbite.com/docs/images/carousel/carousel-3.svg"
+            alt="..."
+          />
+          <img
+            src="https://flowbite.com/docs/images/carousel/carousel-4.svg"
+            alt="..."
+          />
+          <img
+            src="https://flowbite.com/docs/images/carousel/carousel-5.svg"
+            alt="..."
+          />
+        </Carousel>
+      </div>
+    );
+  }
   return (
     <div>
       <Jumbotron />
-      <div className="flex flex-col items-center justify-center w-full">
-        <Card
-          className="max-w-xl mb-4"
-          imgSrc="/images/blog/image-4.jpg"
-          horizontal
-        >
-          <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Noteworthy technology acquisitions 2021
-          </h5>
-          <p className="font-normal text-gray-700 dark:text-gray-400">
-            Here are the biggest enterprise technology acquisitions of 2021 so
-            far, in reverse chronological order.
-          </p>
-        </Card>
-        <Card
-          className="max-w-xl mb-4"
-          imgSrc="/images/blog/image-4.jpg"
-          horizontal
-        >
-          <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Noteworthy technology acquisitions 2021
-          </h5>
-          <p className="font-normal text-gray-700 dark:text-gray-400">
-            Here are the biggest enterprise technology acquisitions of 2021 so
-            far, in reverse chronological order.
-          </p>
-        </Card>
-        <Card
-          className="max-w-xl mb-4"
-          imgSrc="/images/blog/image-4.jpg"
-          horizontal
-        >
-          <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Noteworthy technology acquisitions 2021
-          </h5>
-          <p className="font-normal text-gray-700 dark:text-gray-400">
-            Here are the biggest enterprise technology acquisitions of 2021 so
-            far, in reverse chronological order.
-          </p>
-        </Card>
-      </div>
+      {CarouselComponent()}
     </div>
   );
 }
