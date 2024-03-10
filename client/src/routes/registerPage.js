@@ -56,7 +56,6 @@ export default function RegisterPage() {
   // TODO: ON SUBMIT REGISTER USER HOOK
   // ----------------------------------
   const onSubmit = async (data) => {
-    console.log("data", data);
     try {
       const { username, email, password } = data;
       await registerUser({
@@ -75,7 +74,6 @@ export default function RegisterPage() {
 
   return (
     <Card className="max-w-3xl">
-      <pre>{JSON.stringify(errors, null, 2)}</pre>
       <form
         onSubmit={handleSubmit(onSubmit)}
         noValidate

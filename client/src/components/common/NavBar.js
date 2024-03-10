@@ -6,7 +6,7 @@ import { Dropdown, Avatar } from "flowbite-react";
 import { useAuth } from "./AuthProvider";
 
 export const NavBar = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   function profileComponent() {
     return (
       <Dropdown
@@ -27,7 +27,7 @@ export const NavBar = () => {
           </span>
         </Dropdown.Header>
         <Dropdown.Item>Dashboard</Dropdown.Item>
-        <Dropdown.Item>Sign out</Dropdown.Item>
+        <Dropdown.Item onClick={() => logout()}>Sign out</Dropdown.Item>
       </Dropdown>
     );
   }
