@@ -7,22 +7,32 @@ import { z } from "zod";
 import { useDispatch } from "react-redux";
 import { useAuth } from "../components/common/AuthProvider";
 import { Link } from "react-router-dom";
+import { useRegisterUser } from "../hooks/api/user/useRegisterUser";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
   // dispatch and navigate
   const dispatch = useDispatch();
   const { login } = useAuth();
+  const { mutateAsync: registerUser } = useRegisterUser();
 
   // ----------------------------------
   // FORM VALIDATIONS
   // ----------------------------------
   const schema = z.object({
+    username: z
+      .string()
+      .min(1, "Username is required")
+      .max(50, { message: "Username must be less than 50 characters" }),
     email: z
       .string()
       .min(1, "Email is required")
       .email({ message: "Invalid email address" }),
     password: z
+      .string()
+      .min(1, "Password is required")
+      .min(8, { message: "Password must have at least 8 characters" }),
+    confirmPassword: z
       .string()
       .min(1, "Password is required")
       .min(8, { message: "Password must have at least 8 characters" }),
@@ -34,21 +44,27 @@ export default function RegisterPage() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm({
     mode: "onSubmit",
     resolver: zodResolver(schema),
   });
 
-  const watchAllFields = watch(); // Watching all fields
+  //const watchAllFields = watch(); // Watching all fields
 
   // ----------------------------------
   // TODO: ON SUBMIT REGISTER USER HOOK
   // ----------------------------------
   const onSubmit = async (data) => {
+    console.log("data", data);
     try {
-      login(data);
+      const { username, email, password } = data;
+      await registerUser({
+        username,
+        email,
+        password,
+      });
+      login({ email, password });
       // Only navigate after a successful login
       navigate("/");
     } catch (error) {
@@ -59,7 +75,7 @@ export default function RegisterPage() {
 
   return (
     <Card className="max-w-3xl">
-      <pre>{JSON.stringify(watchAllFields, null, 2)}</pre>
+      <pre>{JSON.stringify(errors, null, 2)}</pre>
       <form
         onSubmit={handleSubmit(onSubmit)}
         noValidate
@@ -74,13 +90,28 @@ export default function RegisterPage() {
         <br />
         <div>
           <div className="mb-2 block">
+            <Label htmlFor="username" value="Your username" />
+          </div>
+          <TextInput
+            id="username"
+            type="username"
+            placeholder="John"
+            color={`${errors.username ? "failure" : "gray"}`}
+            shadow
+            {...register("username")}
+          />
+          <small className="mt-2 text-sm text-red-600 dark:text-red-500">
+            {errors?.username && errors.username.message}
+          </small>
+        </div>
+        <div>
+          <div className="mb-2 block">
             <Label htmlFor="email" value="Your email" />
           </div>
           <TextInput
             id="email"
             type="email"
             placeholder="name@flowbite.com"
-            required
             color={`${errors.email ? "failure" : "gray"}`}
             shadow
             {...register("email")}
@@ -96,25 +127,33 @@ export default function RegisterPage() {
           <TextInput
             id="password"
             type="password"
-            required
+            placeholder="***"
+            color={`${errors.email ? "failure" : "gray"}`}
             shadow
             {...register("password")}
           />
+          <small className="mt-2 text-sm text-red-600 dark:text-red-500">
+            {errors?.password && errors.password.message}
+          </small>
         </div>
         <div>
           <div className="mb-2 block">
             <Label htmlFor="repeatPassword" value="Repeat password" />
           </div>
           <TextInput
-            id="repeatPassword"
+            id="confirmPassword"
             type="password"
-            required
+            placeholder="***"
+            color={`${errors.confirmPassword ? "failure" : "gray"}`}
             shadow
-            {...register("repeatPassword")}
+            {...register("confirmPassword")}
           />
+          <small className="mt-2 text-sm text-red-600 dark:text-red-500">
+            {errors?.confirmPassword && errors.confirmPassword.message}
+          </small>
         </div>
         <div className="flex items-center gap-2">
-          <Checkbox id="agree" />
+          <Checkbox id="agree" {...register("agree")} />
           <Label htmlFor="agree" className="flex">
             I agree with the&nbsp;
             <Link
