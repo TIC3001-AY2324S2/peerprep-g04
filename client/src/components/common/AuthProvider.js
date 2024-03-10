@@ -72,6 +72,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     Cookies.remove("accessToken");
     dispatch(clearUser());
+    navigate("/");
   };
 
   return (
