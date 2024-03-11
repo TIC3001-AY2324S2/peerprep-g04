@@ -2,10 +2,14 @@ import QuestionModel from "./question-model.js";
 import mongoose from "mongoose";
 import "dotenv/config.js";
 
-let mongoDBUri =
-  process.env.ENV == "PROD"
-    ? process.env.DB_CLOUD_URI
-    : process.env.DB_LOCAL_URI;
+let mongoDBUri;
+if (process.env.ENV === "PROD") {
+  mongoDBUri = process.env.DB_CLOUD_URI;
+} else if (process.env.ENV === "DOCKER") {
+  mongoDBUri = process.env.DB_DOCKER_URI;
+} else {
+  mongoDBUri = process.env.DB_LOCAL_URI;
+}
 
 mongoose.connect(mongoDBUri, {
   useNewUrlParser: true,

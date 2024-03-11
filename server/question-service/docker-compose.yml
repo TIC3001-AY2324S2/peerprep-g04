@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  mongo_db:
+    image: mongo:latest
+    container_name: question_service_database
+    restart: always
+    volumes:
+      - mongo_db:/data/db
+
+  question_service:
+    build: .
+    container_name: question_service
+    restart: always
+    ports: 
+      - 3002:3002
+    env_file:
+      - .env
+    environment:
+      ENV: DOCKER
+    depends_on:
+      - mongo_db
+
+volumes:
+  mongo_db: {}
