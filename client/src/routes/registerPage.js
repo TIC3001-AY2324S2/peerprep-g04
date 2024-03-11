@@ -34,7 +34,7 @@ export default function RegisterPage() {
       .min(8, { message: "Password must have at least 8 characters" }),
     confirmPassword: z
       .string()
-      .min(1, "Password is required")
+      .min(1, "Please confirm your password.")
       .min(8, { message: "Password must have at least 8 characters" }),
   });
 
