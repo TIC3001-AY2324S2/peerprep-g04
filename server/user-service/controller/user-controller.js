@@ -5,14 +5,14 @@ import { ormUpdateUser as _updateUser } from "../model/user-orm.js";
 import { ormUpdateUserPrivilege as _updateUserPrivilege } from "../model/user-orm.js";
 import { ormFindAllUsers as _findAllUsers } from "../model/user-orm.js";
 
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 
 export async function createUser(req, res) {
   try {
     const { username, email, password } = req.body;
 
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(password, salt);
+    const salt = bcryptjs.genSaltSync(10);
+    const hashedPassword = bcryptjs.hashSync(password, salt);
 
     if (username && email && hashedPassword) {
       console.log(`CREATE USER: Email Obtained: ${email}`);
@@ -111,8 +111,8 @@ export async function updateUser(req, res) {
   try {
     const { id, username, email, password } = req.body;
 
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(password, salt);
+    const salt = bcryptjs.genSaltSync(10);
+    const hashedPassword = bcryptjs.hashSync(password, salt);
 
     if (id && username && email && hashedPassword) {
       console.log(`UPDATE USER: ID Obtained: ${id}`);

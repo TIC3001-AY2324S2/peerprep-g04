@@ -1,19 +1,19 @@
 version: '3'
 
 services:
-  question_service_mongo_db:
+  user_service_mongo_db:
     image: mongo:latest
-    container_name: question_service_database
+    container_name: user_service_database
     restart: always
     volumes:
-      - question_service_mongo_db:/data/db
+      - user_service_mongo_db:/data/db
 
-  question_service:
+  user_service:
     build: .
-    container_name: question_service
+    container_name: user_service
     restart: always
     ports: 
-      - 3002:3002
+      - 3001:3001
     env_file:
       - .env
     environment:
@@ -22,4 +22,4 @@ services:
       - mongo_db
 
 volumes:
-  question_service_mongo_db: {}
+  user_service_mongo_db: {}

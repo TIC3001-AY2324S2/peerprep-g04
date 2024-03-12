@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { ormFindUserByEmail } from "../model/user-orm.js";
 
@@ -11,7 +11,7 @@ export async function handleLogin(req, res) {
         return res.status(401).json({ message: "Wrong email and/or password" });
       }
 
-      const match = await bcrypt.compare(password, user.password);
+      const match = await bcryptjs.compare(password, user.password);
       if (!match) {
         return res.status(401).json({ message: "Wrong email and/or password" });
       }
