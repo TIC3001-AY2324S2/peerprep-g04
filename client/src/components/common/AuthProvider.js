@@ -3,7 +3,15 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setUser, clearUser, loginUser } from "../../store/slices/userSlices";
+import {
+  setUser,
+  clearUser,
+  loginUser,
+  logoutUser,
+} from "../../store/slices/userSlices";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
@@ -70,7 +78,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    Cookies.remove("accessToken");
+    dispatch(logoutUser());
     dispatch(clearUser());
     navigate("/");
   };

@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function parseJwt(token) {
   try {
@@ -38,8 +40,16 @@ export const loginUser = createAsyncThunk(
       ).unwrap();
 
       // Combine the user data with the access token and return
+      // Display a success toast
+      toast.success("Login successful!", {
+        autoClose: 500, // 5 seconds
+      });
+
       return { ...userData, accessToken };
     } catch (error) {
+      toast.error("Login failed!", {
+        autoClose: 500, // 5 seconds
+      });
       return rejectWithValue(error.response.data);
     }
   }
@@ -50,6 +60,9 @@ export const logoutUser = createAsyncThunk(
   "user/logout",
   async (_, { dispatch }) => {
     Cookies.remove("accessToken"); // Remove token from cookies
+    toast.info("Logout successful!", {
+      autoClose: 500, // 2 seconds
+    });
 
     return;
   }

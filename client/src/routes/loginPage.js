@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
@@ -34,10 +34,16 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     mode: "onSubmit",
     resolver: zodResolver(schema),
   });
+
+  // Reset the form when the component mounts
+  useEffect(() => {
+    reset();
+  }, [reset]);
 
   // ----------------------------------
   // TODO: ON SUBMIT HOOK
@@ -74,11 +80,11 @@ export default function LoginPage() {
           <TextInput
             id="email"
             type="email"
-            placeholder="name@flowbite.com"
+            placeholder="johndoe@gmail.com"
             required
             color={`${errors.email ? "failure" : "gray"}`}
-            shadow
             {...register("email")}
+            autoComplete="off"
           />
           <small className="mt-2 text-sm text-red-600 dark:text-red-500">
             {errors?.email && errors.email.message}
@@ -95,6 +101,7 @@ export default function LoginPage() {
             shadow
             color={`${errors.password ? "failure" : "gray"}`}
             {...register("password")}
+            autoComplete="current-password"
           />
           <small className="mt-2 text-sm text-red-600 dark:text-red-500">
             {errors?.password && errors.password.message}

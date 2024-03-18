@@ -113,6 +113,7 @@ export default function RegisterPage() {
             color={`${errors.email ? "failure" : "gray"}`}
             shadow
             {...register("email")}
+            autoComplete="off"
           />
           <small className="mt-2 text-sm text-red-600 dark:text-red-500">
             {errors?.email && errors.email.message}

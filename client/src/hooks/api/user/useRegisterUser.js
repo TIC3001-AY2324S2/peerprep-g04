@@ -1,5 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const useRegisterUser = () => {
   const queryClient = useQueryClient();
@@ -11,6 +13,9 @@ export const useRegisterUser = () => {
   return useMutation({
     mutationFn: (req) => registerUser(req),
     onSuccess: (_, req) => {
+      toast.success("Registration successful!", {
+        autoClose: 500,
+      });
       queryClient.invalidateQueries(["createUser"]);
     },
   });
