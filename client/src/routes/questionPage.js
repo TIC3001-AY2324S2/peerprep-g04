@@ -1,6 +1,7 @@
 import { React, useState } from "react";
 import { Link } from "react-router-dom";
 import { useGetAllQuestionData } from "../hooks/api/question/useGetAllQuestions";
+import { useGetPaginatedQuestionData } from "../hooks/api/question/useGetPaginatedQuestions";
 import { QuestionFormModal } from "../components/question/questionFormModal";
 
 import { Button, Modal, Card, Dropdown, Badge } from "flowbite-react";
@@ -12,9 +13,10 @@ export const QuestionPage = () => {
   const [openDeleteQuestionModal, setOpenDeleteQuestionModal] = useState(false);
   const [openEditQuestionModal, setOpenEditQuestionModal] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
+  const [page, setPage] = useState(1);
   // const { user } = useAuth();
 
-  const { data, isFetching, isPending, error } = useGetAllQuestionData();
+  const { data, isFetching, isPending } = useGetPaginatedQuestionData(page, 5);
 
   // ----------------------------------
   // RENDER COMPONENTS
@@ -113,6 +115,54 @@ export const QuestionPage = () => {
     );
   };
 
+  const renderPagination = () => {
+    let pages = [];
+    if (!isFetching && data) {
+      for (let i = 1; i <= data.pageCount; i++) {
+        pages.push(
+          <li key={i}>
+            <p
+              onClick={() => setPage(i)}
+              className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+            >
+              {i}
+            </p>
+          </li>
+        );
+      }
+    }
+
+    if (!isFetching && data) {
+      return (
+        <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+          <li>
+            <p
+              onClick={() => data.previous && setPage(data.previous.page)}
+              className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${
+                !data.previous ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            >
+              Previous
+            </p>
+          </li>
+          {pages}
+          <li>
+            <p
+              onClick={() => data.next && setPage(data.next.page)}
+              className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${
+                !data.next ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            >
+              Next
+            </p>
+          </li>
+        </ul>
+      );
+    } else {
+      return <div></div>;
+    }
+  };
+
   // ----------------------------------
   // RETURN BLOCK
   // ----------------------------------
@@ -178,9 +228,6 @@ export const QuestionPage = () => {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
-                No.
-              </th>
-              <th scope="col" className="px-6 py-3">
                 Title
               </th>
               <th scope="col" className="px-6 py-3">
@@ -200,11 +247,10 @@ export const QuestionPage = () => {
           <tbody>
             {!isPending &&
               data &&
-              data.data &&
-              data.data.map((item, index) => {
+              data.result &&
+              data.result.map((item, index) => {
                 return (
                   <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <td className="w-4 p-4">{index + 1}</td>
                     <th
                       scope="row"
                       className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
@@ -216,9 +262,7 @@ export const QuestionPage = () => {
                         {item.title}
                       </Link>
                     </th>
-                    <td className="px-6 py-4">
-                      <Badge color="info">{item.category}</Badge>
-                    </td>
+                    <td className="px-6 py-4">{item.category}</td>
                     <td className="px-6 py-4">{item.complexity}</td>
                     <td className="px-6 py-4">{item.description}</td>
                     <td className="px-6 py-4">{actionButton(item)}</td>
@@ -235,47 +279,14 @@ export const QuestionPage = () => {
         <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
           Showing{" "}
           <span className="font-semibold text-gray-900 dark:text-white">
-            1-10{" "}
+            1-5{" "}
           </span>
           of{" "}
           <span className="font-semibold text-gray-900 dark:text-white">
-            {data && JSON.stringify(data.data.length)}
+            {data && JSON.stringify(data.total)}
           </span>
         </span>
-        <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-          <li>
-            <a
-              href="#"
-              className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              Previous
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              1
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              2
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              Next
-            </a>
-          </li>
-        </ul>
+        {renderPagination()}
       </nav>
 
       {openDeleteQuestionModal && (
