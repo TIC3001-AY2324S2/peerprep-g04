@@ -17,6 +17,38 @@ export async function getQuestions(req, res) {
   }
 }
 
+export async function getPaginatedQuestions(req, res) {
+  const allQuestions = await _findAllQuestions();
+  const page = req.query.page;
+  const limit = req.query.limit;
+
+  const startIndex = (page - 1) * limit;
+  const lastIndex = page * limit;
+
+  const results = {};
+
+  results.total = allQuestions.length;
+  results.pageCount = Math.ceil(allQuestions.length / limit);
+
+  if (lastIndex < allQuestions.length) {
+    results.next = {
+      page: parseInt(page) + 1,
+      limit: parseInt(limit),
+    };
+  }
+
+  if (startIndex > 0) {
+    results.previous = {
+      page: parseInt(page) - 1,
+      limit: parseInt(limit),
+    };
+  }
+
+  results.result = allQuestions.slice(startIndex, lastIndex);
+
+  res.json(results);
+}
+
 export async function createQuestion(req, res) {
   try {
     const { title, description, category, complexity } = req.body;

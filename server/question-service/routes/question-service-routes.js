@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getQuestions,
+  getPaginatedQuestions,
   deleteQuestion,
   createQuestion,
   updateQuestion,
@@ -9,6 +10,8 @@ import {
 const router = express.Router();
 
 router.get("/all", getQuestions);
+
+router.get("/paginatedQuestions", getPaginatedQuestions);
 
 router.post("/", createQuestion);
 
