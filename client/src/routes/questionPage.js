@@ -1,11 +1,9 @@
 import { React, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, Modal } from "flowbite-react";
 import { useGetAllQuestionData } from "../hooks/api/question/useGetAllQuestions";
 import { QuestionFormModal } from "../components/question/questionFormModal";
 
-import { Card } from "flowbite-react";
-import { Dropdown } from "flowbite-react";
+import { Button, Modal, Card, Dropdown, Badge } from "flowbite-react";
 import { DeleteQuestionModal } from "../components/question/deleteQuestionModal";
 
 export const QuestionPage = () => {
@@ -183,7 +181,7 @@ export const QuestionPage = () => {
                 No.
               </th>
               <th scope="col" className="px-6 py-3">
-                Titile
+                Title
               </th>
               <th scope="col" className="px-6 py-3">
                 Category
@@ -218,7 +216,9 @@ export const QuestionPage = () => {
                         {item.title}
                       </Link>
                     </th>
-                    <td className="px-6 py-4">{item.category}</td>
+                    <td className="px-6 py-4">
+                      <Badge color="info">{item.category}</Badge>
+                    </td>
                     <td className="px-6 py-4">{item.complexity}</td>
                     <td className="px-6 py-4">{item.description}</td>
                     <td className="px-6 py-4">{actionButton(item)}</td>

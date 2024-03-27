@@ -19,7 +19,7 @@ services:
     environment:
       ENV: DOCKER
     depends_on:
-      - mongo_db
+      - question_service_mongo_db
 
 volumes:
   question_service_mongo_db: {}

@@ -15,7 +15,7 @@ export async function ormCreateQuestion(
     const newQuestion = await createQuestion({
       title,
       description,
-      category,
+      category: JSON.stringify(category),
       complexity,
     });
     await newQuestion.save();
@@ -53,7 +53,7 @@ export async function ormUpdateQuestion(
       id,
       title,
       description,
-      category,
+      JSON.stringify(category),
       complexity
     );
     console.log(result);

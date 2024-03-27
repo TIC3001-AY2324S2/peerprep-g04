@@ -1,9 +1,10 @@
 import { React } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useCreateQuestion } from "../../hooks/api/question/useCreateQuestion";
 import { useEditQuestion } from "../../hooks/api/question/useEditQuestion";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import CreatableSelect from "react-select/creatable";
 import {
   Button,
   Label,
@@ -24,7 +25,7 @@ export const QuestionFormModal = ({
   // ----------------------------------
   const schema = z.object({
     title: z.string().min(1, "Please enter a title"),
-    category: z.string().min(1, "Please enter a category"),
+    category: z.string().array().min(1, "Please enter a category"),
     complexity: z.string().min(1, "Please select a complexity"),
     description: z.string().min(1, "Please enter a description"),
   });
@@ -49,13 +50,23 @@ export const QuestionFormModal = ({
 
   const {
     register,
+    control,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
     reset,
+    watch,
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: initialFormValues,
   });
+
+  const watchAllFields = watch();
+
+  const options = [
+    { value: "Array", label: "Array" },
+    { value: "String", label: "String" },
+    { value: "Algorithm", label: "Algorithm" },
+  ];
 
   // ----------------------------------
   // SUBMIT HOOK
@@ -89,6 +100,7 @@ export const QuestionFormModal = ({
           <h1 className="mb-4 text-2xl font-bold text-gray-900 dark:text-white">
             {isEdit ? "Edit Question" : "Add a new question"}
           </h1>
+          <pre>{JSON.stringify(watchAllFields, null, 2)}</pre>
           <form
             onSubmit={handleSubmit(onSubmit)}
             noValidate
@@ -113,14 +125,33 @@ export const QuestionFormModal = ({
               </div>
               <div className="w-full">
                 <Label htmlFor="Category" value="Category" />
-                <TextInput
-                  type="text"
+                <Controller
+                  control={control}
                   name="category"
-                  id="category"
-                  color={`${errors.category ? "failure" : "gray"}`}
-                  placeholder="ie: Array"
-                  {...register("category")}
+                  render={({
+                    field: { onChange, onBlur, name },
+                    formState,
+                  }) => (
+                    <CreatableSelect
+                      isClearable
+                      closeMenuOnSelect={false}
+                      isMulti
+                      options={options}
+                      onBlur={onBlur}
+                      name={name}
+                      value={
+                        formState.values &&
+                        formState.values[name].map((val) =>
+                          options.find((option) => option.value === val)
+                        )
+                      }
+                      onChange={(option) =>
+                        onChange(option ? option.map((o) => o.value) : [])
+                      }
+                    />
+                  )}
                 />
+
                 {errors?.category && (
                   <small className="mt-2 text-sm text-red-600 dark:text-red-500">
                     {errors.category.message}

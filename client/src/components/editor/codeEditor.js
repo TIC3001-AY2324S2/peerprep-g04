@@ -30,19 +30,19 @@ const CodeEditor = () => {
   //   );
   // };
 
-  // const executeCode = () => {
-  //   try {
-  //     // eslint-disable-next-line no-eval
-  //     const output = eval(userCode); // Execute the current userCode
-  //     console.log(output);
-  //     // Check if output is undefined before calling toString
-  //     const result = output !== undefined ? output.toString() : "No output";
-  //     setCodeResult(result);
-  //   } catch (error) {
-  //     console.error("Error executing code: ", error);
-  //     setCodeResult(`Error: ${error.message}`);
-  //   }
-  // };
+  const executeCode = () => {
+    try {
+      // eslint-disable-next-line no-eval
+      const output = eval(userCode); // Execute the current userCode
+      console.log(output);
+      // Check if output is undefined before calling toString
+      const result = output !== undefined ? output.toString() : "No output";
+      setCodeResult(result);
+    } catch (error) {
+      console.error("Error executing code: ", error);
+      setCodeResult(`Error: ${error.message}`);
+    }
+  };
 
   return (
     <div className="overlay rounded-md overflow-hidden w-full h-full shadow-4xl">
@@ -55,10 +55,10 @@ const CodeEditor = () => {
         onChange={handleEditorChange}
         // onMount={handleEditorDidMount}
       />
-      {/* <Button onClick={executeCode} className="mt-2">
+      <Button onClick={executeCode} className="mt-2">
         Run Code
       </Button>{" "}
-      <pre className="mt-2">Output: {codeResult}</pre> */}
+      <pre className="mt-2">Output: {codeResult}</pre>
     </div>
   );
 };
