@@ -70,9 +70,12 @@ export async function ormUpdateQuestion(
   }
 }
 
-export async function ormFindAllQuestions() {
+export async function ormFindAllQuestions(search = "") {
+  const queryOptions = search
+    ? { title: { $regex: search, $options: "i" } }
+    : {};
   try {
-    const result = await findAllQuestions();
+    const result = await findAllQuestions(queryOptions);
 
     if (result.length !== 0) {
       return result;

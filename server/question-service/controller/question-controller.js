@@ -4,7 +4,7 @@ import { ormDeleteQuestion as _deleteQuestion } from "../model/question-orm.js";
 import { ormUpdateQuestion as _updateQuestion } from "../model/question-orm.js";
 
 export async function getQuestions(req, res) {
-  const response = await _findAllQuestions();
+  const response = await _findAllQuestions(req.query.search);
 
   if (response === null) {
     return res.status(404).json({ message: `No questions exist!` });
@@ -18,35 +18,47 @@ export async function getQuestions(req, res) {
 }
 
 export async function getPaginatedQuestions(req, res) {
-  const allQuestions = await _findAllQuestions();
-  const page = req.query.page;
-  const limit = req.query.limit;
+  try {
+    const page = req.query.page;
+    const limit = req.query.limit;
+    const search = req.query.search ? req.query.search : "";
+    const allQuestions = await _findAllQuestions(search);
+    const questionCount = allQuestions?.length || 0;
 
-  const startIndex = (page - 1) * limit;
-  const lastIndex = page * limit;
+    const startIndex = (page - 1) * limit;
+    const lastIndex = page * limit;
 
-  const results = {};
+    const results = {};
+    if (allQuestions) {
+      results.total = questionCount;
+      results.pageCount = allQuestions?.length
+        ? Math.ceil(allQuestions?.length / limit)
+        : 0;
 
-  results.total = allQuestions.length;
-  results.pageCount = Math.ceil(allQuestions.length / limit);
+      if (lastIndex < questionCount) {
+        results.next = {
+          page: parseInt(page) + 1,
+          limit: parseInt(limit),
+        };
+      }
 
-  if (lastIndex < allQuestions.length) {
-    results.next = {
-      page: parseInt(page) + 1,
-      limit: parseInt(limit),
-    };
+      if (startIndex > 0) {
+        results.previous = {
+          page: parseInt(page) - 1,
+          limit: parseInt(limit),
+        };
+      }
+
+      results.result = allQuestions.slice(startIndex, lastIndex);
+    }
+
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      message: "An error occurred while fetching paginated questions.",
+    });
   }
-
-  if (startIndex > 0) {
-    results.previous = {
-      page: parseInt(page) - 1,
-      limit: parseInt(limit),
-    };
-  }
-
-  results.result = allQuestions.slice(startIndex, lastIndex);
-
-  res.json(results);
 }
 
 export async function createQuestion(req, res) {

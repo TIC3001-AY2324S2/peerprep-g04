@@ -100,7 +100,6 @@ export const QuestionFormModal = ({
           <h1 className="mb-4 text-2xl font-bold text-gray-900 dark:text-white">
             {isEdit ? "Edit Question" : "Add a new question"}
           </h1>
-          <pre>{JSON.stringify(watchAllFields, null, 2)}</pre>
           <form
             onSubmit={handleSubmit(onSubmit)}
             noValidate

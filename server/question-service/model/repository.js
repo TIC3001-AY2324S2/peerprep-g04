@@ -29,8 +29,8 @@ export async function createQuestion(params) {
   return new QuestionModel(params);
 }
 
-export async function findAllQuestions() {
-  return QuestionModel.find();
+export async function findAllQuestions(queryOptions) {
+  return QuestionModel.find(queryOptions);
 }
 
 export async function updateQuestion(
