@@ -124,14 +124,47 @@ export const QuestionPage = () => {
   const renderPagination = () => {
     let pages = [];
     if (!isFetching && data) {
-      for (let i = 1; i <= data.pageCount; i++) {
+      const startPage = Math.max(1, page - 1);
+      const endPage = Math.min(data.pageCount, page + 1);
+
+      if (startPage > 1) {
+        pages.push(
+          <li key={1}>
+            <p
+              onClick={() => setPage(1)}
+              className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+            >
+              1
+            </p>
+          </li>
+        );
+        pages.push(<li key={"start"}>..</li>);
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
         pages.push(
           <li key={i}>
             <p
               onClick={() => setPage(i)}
-              className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${
+                page === i ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
               {i}
+            </p>
+          </li>
+        );
+      }
+
+      if (endPage < data.pageCount) {
+        pages.push(<li key={"end"}>..</li>);
+        pages.push(
+          <li key={data.pageCount}>
+            <p
+              onClick={() => setPage(data.pageCount)}
+              className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+            >
+              {data.pageCount}
             </p>
           </li>
         );
