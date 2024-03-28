@@ -8,6 +8,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QuestionPage } from "./routes/questionPage";
 import ProfilePage from "./routes/profilePage";
 import RegisterPage from "./routes/registerPage";
+import QuestionDetailsPage from "./routes/questionDetailsPage";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "/question",
         element: <QuestionPage />,
+      },
+      {
+        path: "/question/:id",
+        element: <QuestionDetailsPage />,
       },
       {
         path: "/profile",

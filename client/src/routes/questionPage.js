@@ -1,6 +1,5 @@
 import { React, useState } from "react";
 import { Link } from "react-router-dom";
-import { useGetAllQuestionData } from "../hooks/api/question/useGetAllQuestions";
 import { useGetPaginatedQuestionData } from "../hooks/api/question/useGetPaginatedQuestions";
 import { QuestionFormModal } from "../components/question/questionFormModal";
 import { CiSearch } from "react-icons/ci";
@@ -20,7 +19,7 @@ export const QuestionPage = () => {
 
   const { data, isFetching, isPending } = useGetPaginatedQuestionData(
     page,
-    5,
+    8,
     search
   );
 

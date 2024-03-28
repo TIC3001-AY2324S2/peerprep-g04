@@ -37,7 +37,7 @@ export const NavBar = () => {
       <div className="mx-auto max-w-7xl">
         <Navbar fluid rounded>
           <Navbar.Brand as={Link} href="/">
-            <img src="pplogo.jpg" className="h-8" alt="Flowbite Logo" />
+            <img src="/images/pplogo.jpg" className="h-8" alt="Flowbite Logo" />
             <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">
               PeerPrep
             </span>
