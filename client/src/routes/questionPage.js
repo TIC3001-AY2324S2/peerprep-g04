@@ -1,5 +1,5 @@
 import { React, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useGetPaginatedQuestionData } from "../hooks/api/question/useGetPaginatedQuestions";
 import { QuestionFormModal } from "../components/question/questionFormModal";
 import { CiSearch } from "react-icons/ci";
@@ -16,6 +16,7 @@ export const QuestionPage = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   // const { user } = useAuth();
+  const navigate = useNavigate();
 
   const { data, isFetching, isPending } = useGetPaginatedQuestionData(
     page,
@@ -279,12 +280,12 @@ export const QuestionPage = () => {
                       scope="row"
                       className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      <Link
-                        className="block rounded px-3 py-2 text-gray-900 hover:bg-gray-100 md:border-0 md:p-0 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent md:dark:hover:text-blue-500"
-                        to={`/`}
+                      <td
+                        className="block cursor-pointer rounded px-3 py-2 text-gray-900 hover:bg-gray-100 md:border-0 md:p-0 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent md:dark:hover:text-blue-500"
+                        onClick={() => navigate(`/question/${item._id}`)}
                       >
                         {item.title}
-                      </Link>
+                      </td>
                     </th>
                     <td className="px-6 py-4">{item.category}</td>
                     <td className="px-6 py-4">{item.complexity}</td>
