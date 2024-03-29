@@ -1,15 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { Button } from "flowbite-react";
-import * as Y from "yjs";
-import { WebrtcProvider } from "y-webrtc";
-import { MonacoBinding } from "y-monaco";
 import CodeMirror from "@uiw/react-codemirror";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+import { javascript } from "@codemirror/lang-javascript";
 
 const CodeEditor = () => {
   const [userCode, setUserCode] = useState("// Type your code here");
   const [codeResult, setCodeResult] = useState("");
-  const editorRef = useRef(null);
   const handleEditorChange = (value) => {
     setUserCode(value); // Update userCode with the current content of the editor
   };
@@ -51,6 +48,7 @@ const CodeEditor = () => {
         value={userCode}
         height="50vh"
         theme={vscodeDark}
+        extensions={[javascript({ jsx: true })]}
         onChange={handleEditorChange}
       />
       <Button onClick={executeCode} className="mt-2">

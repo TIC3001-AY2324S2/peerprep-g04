@@ -2,15 +2,13 @@ import React from "react";
 import { useGetQuestionById } from "../hooks/api/question/useGetQuestionById";
 import { useParams } from "react-router-dom";
 import { Card } from "flowbite-react";
-import CodeMirror from "@uiw/react-codemirror";
-import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+import CodeEditor from "../components/editor/codeEditor";
 
 export default function QuestionDetailsPage() {
   const { id } = useParams();
   const { data, isLoading } = useGetQuestionById({
     id: id,
   });
-  const code = "console.log('Code Mirror!');";
 
   return (
     <div className="w-full h-full">
@@ -30,7 +28,7 @@ export default function QuestionDetailsPage() {
           <div>Loading...</div>
         )}
         <div className="w-1/2 min-w-xl m-2" style={{ height: "500px" }}>
-          <CodeMirror value={code} height="50vh" theme={vscodeDark} />
+          <CodeEditor />
         </div>
       </div>
     </div>
