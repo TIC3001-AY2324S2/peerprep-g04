@@ -233,7 +233,10 @@ export const QuestionPage = () => {
             placeholder="Search for questions"
             required
             autoComplete="off"
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
           />
         </div>
         {/* ADD QUESTION BUTTON */}

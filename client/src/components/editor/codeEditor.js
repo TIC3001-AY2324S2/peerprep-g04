@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Editor } from "@monaco-editor/react";
 import { Button } from "flowbite-react";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { MonacoBinding } from "y-monaco";
+import CodeMirror from "@uiw/react-codemirror";
+import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 
 const CodeEditor = () => {
   const [userCode, setUserCode] = useState("// Type your code here");
@@ -46,14 +47,11 @@ const CodeEditor = () => {
 
   return (
     <div className="overlay rounded-md overflow-hidden w-full h-full shadow-4xl">
-      <Editor
+      <CodeMirror
+        value={userCode}
         height="50vh"
-        width="90%"
-        theme="vs-dark"
-        defaultLanguage="javascript"
-        defaultValue={userCode}
+        theme={vscodeDark}
         onChange={handleEditorChange}
-        // onMount={handleEditorDidMount}
       />
       <Button onClick={executeCode} className="mt-2">
         Run Code

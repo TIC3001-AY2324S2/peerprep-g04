@@ -10,6 +10,8 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@uiw/codemirror-theme-vscode": "^4.21.25",
+    "@uiw/react-codemirror": "^4.21.25",
     "autoprefixer": "^10.4.17",
     "axios": "^1.6.7",
     "chroma-js": "^2.4.2",
