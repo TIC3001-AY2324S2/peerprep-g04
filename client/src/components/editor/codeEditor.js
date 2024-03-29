@@ -45,6 +45,7 @@ const CodeEditor = () => {
   return (
     <div className="overlay rounded-md overflow-hidden w-full h-full shadow-4xl">
       <CodeMirror
+        style={{ fontSize: "12px" }}
         value={userCode}
         height="50vh"
         theme={vscodeDark}
