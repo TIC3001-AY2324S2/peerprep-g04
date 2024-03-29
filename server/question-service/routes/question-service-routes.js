@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getQuestions,
+  getQuestionById,
   getPaginatedQuestions,
   deleteQuestion,
   createQuestion,
@@ -10,6 +11,8 @@ import {
 const router = express.Router();
 
 router.get("/all", getQuestions);
+
+router.get("/find", getQuestionById);
 
 router.get("/paginatedQuestions", getPaginatedQuestions);
 

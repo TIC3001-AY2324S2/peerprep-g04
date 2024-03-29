@@ -2,6 +2,7 @@ import {
   createQuestion,
   deleteQuestion,
   findAllQuestions,
+  findQuestionById,
   updateQuestion,
 } from "./repository.js";
 
@@ -77,6 +78,18 @@ export async function ormFindAllQuestions(search = "") {
   try {
     const result = await findAllQuestions(queryOptions);
 
+    if (result.length !== 0) {
+      return result;
+    }
+    return null;
+  } catch (err) {
+    return { err };
+  }
+}
+
+export async function ormFindQuestionById(id) {
+  try {
+    const result = await findQuestionById(id);
     if (result.length !== 0) {
       return result;
     }

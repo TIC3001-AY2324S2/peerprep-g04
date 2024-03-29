@@ -33,6 +33,10 @@ export async function findAllQuestions(queryOptions) {
   return QuestionModel.find(queryOptions);
 }
 
+export async function findQuestionById(id) {
+  return QuestionModel.findOne({ _id: id });
+}
+
 export async function updateQuestion(
   id,
   title,
