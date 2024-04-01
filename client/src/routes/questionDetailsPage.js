@@ -2,6 +2,7 @@ import React from "react";
 import { useGetQuestionById } from "../hooks/api/question/useGetQuestionById";
 import { useParams } from "react-router-dom";
 import CodeEditor from "../components/editor/codeEditor";
+import Markdown from "react-markdown";
 
 export default function QuestionDetailsPage() {
   const { id } = useParams();
@@ -18,9 +19,7 @@ export default function QuestionDetailsPage() {
               <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                 {data.data.title}
               </h5>
-              <p className="font-normal text-gray-700 dark:text-gray-400">
-                {data.data.description}
-              </p>
+              <Markdown>{data.data.description}</Markdown>
             </section>
           </div>
         ) : (
