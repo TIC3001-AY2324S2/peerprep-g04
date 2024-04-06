@@ -1,8 +1,6 @@
 import amqp from "amqplib/callback_api.js";
 
 const consumeFromQueue = (queueName, callback) => {
-  const exchange_name = "user-matching";
-  const exchange_type = "fanout";
   amqp.connect("amqp://localhost", function (err, connection) {
     if (err) {
       throw err;
@@ -14,10 +12,6 @@ const consumeFromQueue = (queueName, callback) => {
       }
 
       channel.assertQueue(queueName, { durable: false });
-
-      console.log(
-        `[*] Waiting for messages in ${queueName}. To exit, press CTRL+C`
-      );
 
       // Consume messages from the queue
       channel.consume(queueName, async (msg) => {
@@ -32,7 +26,7 @@ const consumeFromQueue = (queueName, callback) => {
       setTimeout(() => {
         channel.close();
         connection.close();
-        console.log("Connection closed");
+        console.log("Connection closed.");
       }, 10000);
     });
   });
