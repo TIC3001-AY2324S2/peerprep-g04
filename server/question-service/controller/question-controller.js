@@ -65,7 +65,8 @@ export async function getPaginatedQuestions(req, res) {
         };
       }
 
-      results.result = allQuestions.slice(startIndex, lastIndex);
+      results.result =
+        allQuestions?.slice(startIndex, lastIndex) || allQuestions;
     }
 
     res.json(results);
