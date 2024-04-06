@@ -290,7 +290,10 @@ export const QuestionPage = () => {
                         {item.title}
                       </td>
                     </th>
-                    <td className="px-6 py-4">{item.category}</td>
+                    <td className="px-6 py-4">{
+                      JSON.parse(item.category).map((category, index, array) => (
+                        <span key={index}>{category}{index !== array.length - 1 && ', '}</span>
+                      ))}</td>
                     <td className="px-6 py-4">{item.complexity}</td>
                     <td className="px-6 py-4">{item.description}</td>
                     <td className="px-6 py-4">{actionButton(item)}</td>
