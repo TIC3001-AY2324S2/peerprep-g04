@@ -36,17 +36,17 @@ export const QuestionFormModal = ({
   const initialFormValues =
     isEdit && selectedQuestion
       ? {
-          title: selectedQuestion.title,
-          category: selectedQuestion.category,
-          complexity: selectedQuestion.complexity,
-          description: selectedQuestion.description,
-        }
+        title: selectedQuestion.title,
+        category: selectedQuestion.category,
+        complexity: selectedQuestion.complexity,
+        description: selectedQuestion.description,
+      }
       : {
-          title: "",
-          category: "",
-          complexity: "Easy",
-          description: "",
-        };
+        title: "",
+        category: "",
+        complexity: "Easy",
+        description: "",
+      };
 
   const {
     register,
@@ -92,6 +92,7 @@ export const QuestionFormModal = ({
   // ----------------------------------
   // RETURN BLOCK
   // ----------------------------------
+ 
   return (
     <Modal show={show} size="4xl" onClose={onCancel} popup>
       <Modal.Header />
@@ -149,6 +150,7 @@ export const QuestionFormModal = ({
                       }
                     />
                   )}
+                  
                 />
 
                 {errors?.category && (
