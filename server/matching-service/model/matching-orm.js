@@ -1,4 +1,29 @@
-import { createMatch, deleteMatch, findMatchById } from "./repository.js";
+import {
+  getAllMatch,
+  createMatch,
+  deleteMatch,
+  findMatchById,
+} from "./repository.js";
+
+export async function ormGetAllMatch(options = "") {
+  const { userOne, userTwo, category, complexity } = options;
+  // construct the filter
+  const filter = {};
+  if (userOne) filter.userOne = userOne;
+  if (userTwo) filter.userTwo = userTwo;
+  if (category) filter.category = category;
+  if (complexity) filter.complexity = complexity;
+
+  try {
+    const result = await getAllMatch(filter);
+    if (result.length !== 0) {
+      return result;
+    }
+    return null;
+  } catch (err) {
+    return { err };
+  }
+}
 
 export async function ormCreateMatch(
   userOne,

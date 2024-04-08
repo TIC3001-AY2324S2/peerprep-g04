@@ -8,7 +8,12 @@ const MatchingModelSchema = mongoose.Schema(
     },
     userTwo: {
       type: String,
-      required: [true, "Please include user two"],
+      required: [false],
+    },
+    status: {
+      type: String,
+      default: "pending",
+      required: [true, "Please include status"],
     },
     roomKey: {
       type: String,
@@ -24,7 +29,7 @@ const MatchingModelSchema = mongoose.Schema(
     },
   },
   {
-    timeStamps: true,
+    timestamps: true,
   }
 );
 

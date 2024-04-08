@@ -23,14 +23,18 @@ db.on(
   console.error.bind(console, "Matching Service MongoDB connection error:")
 );
 
-export async function createMatch(params) {
-  params._id = new mongoose.Types.ObjectId();
-
-  return new MatchingModel(params);
+export async function getAllMatch(options) {
+  return MatchingModel.find(options);
 }
 
 export async function findMatchById(id) {
   return MatchingModel.findOne({ _id: id });
+}
+
+export async function createMatch(params) {
+  params._id = new mongoose.Types.ObjectId();
+
+  return new MatchingModel(params);
 }
 
 export async function deleteMatch(id) {
