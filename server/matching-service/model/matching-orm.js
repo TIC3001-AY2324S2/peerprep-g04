@@ -6,7 +6,7 @@ import {
 } from "./repository.js";
 
 export async function ormGetAllMatch(options = "") {
-  const { userOne, userTwo, status, category, complexity } = options;
+  const { userOne, userTwo, category, complexity } = options;
   // construct the filter
   const filter = {};
   if (userOne) filter.userOne = userOne;
