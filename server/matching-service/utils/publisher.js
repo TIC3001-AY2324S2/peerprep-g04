@@ -1,13 +1,15 @@
 import amqp from "amqplib/callback_api.js";
+import { ormCreateMatch as _createMatch } from "../model/matching-orm.js";
 
 const publishToQueue = async (queueName, data) => {
   const exchange_name = "user-matching";
   const exchange_type = "fanout";
+
   amqp.connect("amqp://localhost", function (error0, connection) {
     if (error0) {
       throw error0;
     }
-    connection.createChannel(function (error1, channel) {
+    connection.createChannel(async function (error1, channel) {
       if (error1) {
         throw error1;
       }

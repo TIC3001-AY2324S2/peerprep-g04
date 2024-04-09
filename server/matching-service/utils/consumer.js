@@ -1,7 +1,11 @@
 import amqp from "amqplib/callback_api.js";
-import searchForMatch from "./matcher.js";
+import { searchForMatchSameComplexity } from "./matcher.js";
+import { searchForMatchAnyComplexity } from "./matcher.js";
 
-const consumeFromQueue = (queueName, callback) => {
+// Declare usersInQueueMap outside of the function
+let usersInQueueMap = new Map();
+
+const consumeFromQueue = async (queueName, callback) => {
   amqp.connect("amqp://localhost", function (err, connection) {
     if (err) {
       throw err;
@@ -14,30 +18,61 @@ const consumeFromQueue = (queueName, callback) => {
 
       channel.assertQueue(queueName, { durable: false });
 
-      // Prefetch one message
-      channel.prefetch(1);
-
-      // Consume messages from the queue
       channel.consume(queueName, async (msg) => {
         if (msg !== null) {
-          // Acknowledge the message
-          let matched = await searchForMatch({ category: queueName });
+          let isMatched = false;
+          const message = JSON.parse(msg.content);
 
-          if (matched === "true") {
-            channel.ack(msg, false, true);
-            return;
+          if (message.status === "JOIN") {
+            // Add to the map msg.content.userId as key and the value is the msg
+            if (!usersInQueueMap.has(message.userId)) {
+              usersInQueueMap.set(message.userId, msg);
+            }
+
+            usersInQueueMap.size > 0 &&
+              usersInQueueMap.forEach((value, key) => {
+                console.log(
+                  `User ID: ${key}, Message: ${
+                    JSON.parse(value.content).status
+                  }`
+                );
+              });
+
+            // Check if there is a match
+            if (usersInQueueMap.size > 1) {
+              if (1) {
+                isMatched = await searchForMatchSameComplexity(
+                  message.userId,
+                  usersInQueueMap
+                );
+              } else {
+                isMatched = await searchForMatchAnyComplexity(
+                  message.userId,
+                  usersInQueueMap
+                );
+              }
+            }
+            channel.ack(msg);
+          } else if (message.status === "MATCHED") {
+            console.log("message status " + message.status);
+            channel.ack(msg);
+            try {
+              usersInQueueMap.delete(message.userId);
+              usersInQueueMap.delete(message.userTwoId);
+            } catch (error) {
+              console.error("Error deleting users from map:", error);
+              // Handle the error appropriately
+            }
+            setTimeout(() => {
+              channel.close();
+              connection.close();
+              console.log("Connection closed.");
+            }, 5000);
           }
-          console.log("Received message: ", msg.content.toString());
-          channel.nack(msg, false, true);
-          callback(msg.content.toString());
+
+          callback(usersInQueueMap);
         }
       });
-
-      setTimeout(() => {
-        channel.close();
-        connection.close();
-        console.log("Connection closed.");
-      }, 30000);
     });
   });
 };

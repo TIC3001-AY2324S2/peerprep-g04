@@ -8,7 +8,7 @@ import consumeFromQueue from "../utils/consumer.js";
 export async function createMatch(req, res) {
   try {
     const { userOne, userTwo, roomKey, category, complexity } = req.body;
-    if (userOne && userTwo && roomKey && category && complexity) {
+    if (userOne && category && complexity) {
       const resp = await _createMatch(
         userOne,
         userTwo,
@@ -93,7 +93,11 @@ export async function createMatch(req, res) {
 export async function publishMessageToQueue(req, res) {
   const queueName = req.body.queueName;
   const data = req.body.data;
-  publishToQueue(queueName, data);
+  await publishToQueue(queueName, data);
+  const myCallback = (usersInQueueMap) => {
+    // console.log("Received message:", messageContent);
+  };
+  await consumeFromQueue(queueName, myCallback);
   res.send(
     `Message with data: ${JSON.stringify(data)} Successfully Sent to Queue`
   );
@@ -101,13 +105,10 @@ export async function publishMessageToQueue(req, res) {
 
 export async function consumeMessageFromQueue(req, res) {
   const queueName = req.body.queueName;
-  const userId = req.body.userId;
-  const myCallback = (messageContent) => {
-    console.log("Received message:", messageContent);
+  const myCallback = (usersInQueueMap) => {
+    // console.log("Received message:", messageContent);
   };
 
   consumeFromQueue(queueName, myCallback);
-  res.send(
-    `User ${userId.toString()} is now waiting for messages in ${queueName}.`
-  );
+  res.send(`now waiting for messages in ${queueName}.`);
 }

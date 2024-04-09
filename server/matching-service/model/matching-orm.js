@@ -6,7 +6,7 @@ import {
 } from "./repository.js";
 
 export async function ormGetAllMatch(options = "") {
-  const { userOne, userTwo, category, complexity } = options;
+  const { userOne, userTwo, status, category, complexity } = options;
   // construct the filter
   const filter = {};
   if (userOne) filter.userOne = userOne;
@@ -27,8 +27,8 @@ export async function ormGetAllMatch(options = "") {
 
 export async function ormCreateMatch(
   userOne,
-  userTwo,
-  roomKey,
+  userTwo = null,
+  roomKey = null,
   category,
   complexity
 ) {
@@ -43,7 +43,7 @@ export async function ormCreateMatch(
     await newMatch.save();
     return true;
   } catch (err) {
-    console.log("ERROR: Could not create new Match");
+    console.log("ERROR: Could not create new Match" + err);
     return { err };
   }
 }

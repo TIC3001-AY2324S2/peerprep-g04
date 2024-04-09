@@ -10,14 +10,9 @@ const MatchingModelSchema = mongoose.Schema(
       type: String,
       required: [false],
     },
-    status: {
-      type: String,
-      default: "pending",
-      required: [true, "Please include status"],
-    },
     roomKey: {
       type: String,
-      required: [true, "Please include room key"],
+      required: [false],
     },
     category: {
       type: String,
