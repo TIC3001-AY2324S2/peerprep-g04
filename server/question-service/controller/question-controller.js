@@ -87,11 +87,14 @@ export async function createQuestion(req, res) {
         category,
         complexity
       );
-
       if (resp.err) {
-        return res.status(409).json({
+        return res.status(500).json({
           message:
-            "Could not create a new question! (Possibly question Already Exists!)",
+            "Could not create a new question due to internal server error."
+        });
+      } else if (!resp) {
+        return res.status(409).json({
+          message: "Duplicated question."
         });
       } else {
         console.log(`Created new question ${title} successfully!`);
@@ -129,10 +132,9 @@ export async function updateQuestion(req, res) {
           message: response.err.message,
         });
       } else if (!response) {
-        console.log(`question with id: ${id} not found!`);
-        return res
-          .status(404)
-          .json({ message: `Question with id: ${id} not found!` });
+        //console.log(`question with id: ${id} not found!`);
+        //return res.status(404).json({ message: `Question with id: ${id} not found!` });
+        return res.status(409).json({ message: `Duplicated question title.` });
       } else {
         console.log(`Question with id: ${id} found!`);
         return res.status(200).json({
