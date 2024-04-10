@@ -75,14 +75,16 @@ export const QuestionFormModal = ({
   const { mutateAsync: editQuestion } = useEditQuestion();
 
   const onSubmit = async (data) => {
+    let res = true;
     if (isEdit && selectedQuestion) {
-      await editQuestion({ data, id: selectedQuestion._id });
+      res = await editQuestion({ data, id: selectedQuestion._id });
     } else {
-      await createQuestion(data);
+      res = await createQuestion(data);
     }
-
-    setOpenQuestionFormModal(false);
-    reset();
+    if (res) {
+      setOpenQuestionFormModal(false);
+      reset();
+    }
   };
 
   const onCancel = () => {
