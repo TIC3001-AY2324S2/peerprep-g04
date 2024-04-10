@@ -7,6 +7,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "../components/common/AuthProvider";
 import { useNavigate } from "react-router-dom";
+import { useJoinQueue } from "../hooks/api/match/useJoinQueue";
 
 function CategorySelection({ setValue }) {
   const handleButtonClick = (category) => {
@@ -104,6 +105,7 @@ export default function MatchingPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
   const { user, isLoading } = useAuth();
+  const { mutate: joinQueue } = useJoinQueue();
 
   // ----------------------------------
   // FORM VALIDATIONS - with ZOD
@@ -122,11 +124,9 @@ export default function MatchingPage() {
   };
 
   const {
-    register,
-    control,
     handleSubmit,
     formState: { errors },
-    reset,
+    getValues,
     setValue,
     watch,
   } = useForm({
@@ -145,6 +145,11 @@ export default function MatchingPage() {
   if (isLoading) {
     return <div>Loading...</div>; // or your custom loading component
   }
+
+  const onSubmit = () => {
+    const data = getValues();
+    joinQueue({ data: data });
+  };
 
   return (
     <div className="w-full max-w-2xl">
@@ -169,10 +174,15 @@ export default function MatchingPage() {
             <Button onClick={() => setCurrentStep(currentStep - 1)}>
               Back
             </Button>
-            <Button onClick={() => setCurrentStep(currentStep + 1)}>
-              Next
-              <HiOutlineArrowRight className="ml-2 h-5 w-5" />
-            </Button>
+            {currentStep !== 2 && (
+              <Button onClick={() => setCurrentStep(currentStep + 1)}>
+                Next
+                <HiOutlineArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            )}
+            {currentStep === 2 && (
+              <Button onClick={handleSubmit(onSubmit)}>Join Queue</Button>
+            )}
           </div>
         </div>
       ) : (

@@ -46,7 +46,7 @@ export const searchForMatch = async (
             ) {
               await matchUsers(
                 requestingUserId,
-                parseInt(key),
+                key,
                 category,
                 JSON.parse(value.content).complexity
               );
