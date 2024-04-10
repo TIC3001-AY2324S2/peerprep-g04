@@ -40,30 +40,30 @@ export async function createMatch(req, res) {
   }
 }
 
-// export async function deleteMatch(req, res) {
-//   try {
-//     const { id } = req.body;
-//     if (id) {
-//       const resp = await _deleteMatch(id);
-//       if (resp === false) {
-//         return res.status(404).json({
-//           message: "Could not delete Match! (Possibly Match does not exist!)",
-//         });
-//       } else {
-//         console.log(`Deleted Match successfully!`);
-//         return res.status(200).json({ message: `Deleted Match successfully!` });
-//       }
-//     } else {
-//       return res.status(400).json({
-//         message: "Some info is missing!",
-//       });
-//     }
-//   } catch (err) {
-//     return res
-//       .status(500)
-//       .json({ message: "Database failure when deleting Match!" });
-//   }
-// }
+export async function deleteMatch(req, res) {
+  try {
+    const { id } = req.body;
+    if (id) {
+      const resp = await _deleteMatch(id);
+      if (resp === false) {
+        return res.status(404).json({
+          message: "Could not delete Match! (Possibly Match does not exist!)",
+        });
+      } else {
+        console.log(`Deleted Match successfully!`);
+        return res.status(200).json({ message: `Deleted Match successfully!` });
+      }
+    } else {
+      return res.status(400).json({
+        message: "Some info is missing!",
+      });
+    }
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: "Database failure when deleting Match!" });
+  }
+}
 
 // export async function findMatchById(req, res) {
 //   try {
