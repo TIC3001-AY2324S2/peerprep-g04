@@ -2,26 +2,29 @@ import { ormGetAllMatch as _getAllMatch } from "../model/matching-orm.js";
 import { ormCreateMatch as _createMatch } from "../model/matching-orm.js";
 import publishToQueue from "./publisher.js";
 
-const matchUsers = async (userOne, userTwo) => {
-  const roomKey = `${userOne}-${userTwo}`;
-  const category = "Array";
-  const complexity = "Easy";
+const matchUsers = async (userOne, userTwo, category, complexity) => {
+  if (!userOne || !userTwo || !category || !complexity) {
+    throw new Error("All fields are required");
+  }
 
-  publishToQueue("Array", {
+  const roomKey = `${userOne}-${userTwo}`;
+
+  publishToQueue(category, {
     status: "MATCHED",
     userId: userOne,
     userTwoId: userTwo,
-    category: "Array",
-    complexity: "Easy",
+    category: category,
+    complexity: complexity,
   });
 
   await _createMatch(userOne, userTwo, roomKey, category, complexity);
 };
 
 // This function takes in the user we are trying to match, and traverse the queue to find a match
-export const searchForMatchSameComplexity = async (
+export const searchForMatch = async (
   requestingUserId,
-  userQueue
+  userQueue,
+  anyComplexity = false
 ) => {
   try {
     // Iterate through the userQueue to find a match
@@ -29,30 +32,41 @@ export const searchForMatchSameComplexity = async (
     const requestingUserComplexity = JSON.parse(
       requestingUserData.content
     ).complexity;
-    const queueName = JSON.parse(requestingUserData.content).category;
+    const category = JSON.parse(
+      requestingUserData.content
+    ).category.toUpperCase();
 
     if (userQueue.size > 1) {
-      userQueue.forEach(async (value, key) => {
+      for (let [key, value] of userQueue.entries()) {
         if (key !== requestingUserId) {
-          if (
-            requestingUserComplexity === JSON.parse(value.content).complexity
-          ) {
-            await matchUsers(requestingUserId, parseInt(key));
+          if (!anyComplexity) {
+            if (
+              requestingUserComplexity.toUpperCase() ===
+              JSON.parse(value.content).complexity.toUpperCase()
+            ) {
+              await matchUsers(
+                requestingUserId,
+                parseInt(key),
+                category,
+                JSON.parse(value.content).complexity
+              );
+              return true;
+            }
+          } else {
+            await matchUsers(
+              requestingUserId,
+              parseInt(key),
+              category,
+              JSON.parse(value.content).complexity
+            );
             return true;
           }
         }
-      });
+      }
     }
     return false;
   } catch (error) {
     console.error(error);
     throw error;
   }
-};
-
-export const searchForMatchAnyComplexity = async (
-  requestingUserId,
-  userQueue
-) => {
-  return false;
 };

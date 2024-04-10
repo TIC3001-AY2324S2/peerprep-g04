@@ -1,7 +1,5 @@
 import amqp from "amqplib/callback_api.js";
-import { searchForMatchSameComplexity } from "./matcher.js";
-import { searchForMatchAnyComplexity } from "./matcher.js";
-
+import { searchForMatch } from "./matcher.js";
 // Declare usersInQueueMap outside of the function
 let usersInQueueMap = new Map();
 
@@ -20,14 +18,14 @@ const consumeFromQueue = async (queueName, callback) => {
 
       channel.consume(queueName, async (msg) => {
         if (msg !== null) {
-          let isMatched = false;
           const message = JSON.parse(msg.content);
+          let isMatched = false;
 
-          if (message.status === "JOIN") {
+          if (message.status.toUpperCase() === "JOIN") {
             // Add to the map msg.content.userId as key and the value is the msg
-            if (!usersInQueueMap.has(message.userId)) {
-              usersInQueueMap.set(message.userId, msg);
-            }
+            usersInQueueMap.set(message.userId, msg);
+
+            channel.ack(msg);
 
             usersInQueueMap.size > 0 &&
               usersInQueueMap.forEach((value, key) => {
@@ -40,21 +38,26 @@ const consumeFromQueue = async (queueName, callback) => {
 
             // Check if there is a match
             if (usersInQueueMap.size > 1) {
-              if (1) {
-                isMatched = await searchForMatchSameComplexity(
+              if (
+                !isMatched &&
+                message.matchType &&
+                message.matchType.toString().toUpperCase() !== "ANY"
+              ) {
+                console.log("Checking for SAME complexity match...");
+                isMatched = await searchForMatch(
                   message.userId,
                   usersInQueueMap
                 );
               } else {
-                isMatched = await searchForMatchAnyComplexity(
-                  message.userId,
-                  usersInQueueMap
-                );
+                console.log("Checking for ANY complexity match...");
+                await searchForMatch(message.userId, usersInQueueMap, true);
               }
             }
-            channel.ack(msg);
-          } else if (message.status === "MATCHED") {
-            console.log("message status " + message.status);
+          } else if (message.status.toUpperCase() === "MATCHED") {
+            console.log(
+              message.userId + " " + message.userTwoId + " " + message.status
+            );
+            console.log(usersInQueueMap.size - 2 + " users left in queue");
             channel.ack(msg);
             try {
               usersInQueueMap.delete(message.userId);

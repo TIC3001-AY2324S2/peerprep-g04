@@ -1,9 +1,6 @@
 import express from "express";
-import {
-  createMatch,
-  publishMessageToQueue,
-  consumeMessageFromQueue,
-} from "../controllers/matching-controller.js";
+import { createMatch, joinQueue } from "../controllers/matching-controller.js";
+import setupExchangesAndQueues from "../middlewares/setup-exchange.js";
 
 const router = express.Router();
 
@@ -13,8 +10,6 @@ router.get("/", (req, res) => {
 
 router.post("/createMatch", createMatch);
 
-router.post("/publish", publishMessageToQueue);
-
-router.post("/listen", consumeMessageFromQueue);
+router.post("/joinQueue", setupExchangesAndQueues, joinQueue);
 
 export default router;

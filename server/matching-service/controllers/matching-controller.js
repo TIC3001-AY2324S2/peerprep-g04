@@ -90,25 +90,37 @@ export async function createMatch(req, res) {
 //   }
 // }
 
-export async function publishMessageToQueue(req, res) {
-  const queueName = req.body.queueName;
+export async function joinQueue(req, res) {
   const data = req.body.data;
-  await publishToQueue(queueName, data);
+  const queueName = data.category;
+
+  if (data.status && data.status.toUpperCase() === "JOIN") {
+    if (
+      !data ||
+      !data.status ||
+      !data.userId ||
+      !data.category ||
+      !data.complexity ||
+      !data.matchType
+    ) {
+      return res.status(400).json({
+        message: "Some info is missing!",
+      });
+    }
+  } else {
+    return res.status(400).json({
+      message: "Invalid status!",
+    });
+  }
+
   const myCallback = (usersInQueueMap) => {
     // console.log("Received message:", messageContent);
   };
+
+  await publishToQueue(queueName, data);
+
   await consumeFromQueue(queueName, myCallback);
   res.send(
     `Message with data: ${JSON.stringify(data)} Successfully Sent to Queue`
   );
-}
-
-export async function consumeMessageFromQueue(req, res) {
-  const queueName = req.body.queueName;
-  const myCallback = (usersInQueueMap) => {
-    // console.log("Received message:", messageContent);
-  };
-
-  consumeFromQueue(queueName, myCallback);
-  res.send(`now waiting for messages in ${queueName}.`);
 }
