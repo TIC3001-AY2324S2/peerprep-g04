@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Card } from "flowbite-react";
 import { Stepper } from "../components/matcher/stepper";
 import { HiOutlineArrowRight } from "react-icons/hi";
@@ -101,7 +101,10 @@ function ComplexitySelection({ setValue }) {
 }
 
 export default function MatchingPage() {
-  const { user } = useAuth();
+  const [currentStep, setCurrentStep] = useState(0);
+  const navigate = useNavigate();
+  const { user, isLoading } = useAuth();
+
   // ----------------------------------
   // FORM VALIDATIONS - with ZOD
   // ----------------------------------
@@ -109,11 +112,10 @@ export default function MatchingPage() {
     category: z.string().min(1, "Please enter a category"),
     complexity: z.string().min(1, "Please select a complexity"),
   });
-  const [currentStep, setCurrentStep] = useState(0);
-  const navigate = useNavigate();
+
   const initialFormValues = {
     status: "JOIN",
-    userId: user ? user.userDetails._id : "",
+    userId: "",
     category: "",
     complexity: "",
     matchType: "SAME",
@@ -134,6 +136,16 @@ export default function MatchingPage() {
 
   const watchAllFields = watch();
 
+  useEffect(() => {
+    if (user) {
+      setValue("userId", user.userDetails._id);
+    }
+  }, [user, setValue]);
+
+  if (isLoading) {
+    return <div>Loading...</div>; // or your custom loading component
+  }
+
   return (
     <div className="w-full max-w-2xl">
       {user ? (
@@ -143,7 +155,15 @@ export default function MatchingPage() {
           <div className="flex flex-wrap gap-2 mt-10">
             {currentStep === 0 && <CategorySelection setValue={setValue} />}
             {currentStep === 1 && <ComplexitySelection setValue={setValue} />}
-            {currentStep === 2 && <>Review your selection</>}
+            {currentStep === 2 && (
+              <>
+                <div>
+                  <h1>Review your selection</h1>
+                  <h2>Category: {watchAllFields.category}</h2>
+                  <h2>Complexity: {watchAllFields.complexity}</h2>
+                </div>
+              </>
+            )}
           </div>
           <div className="flex flex-column mt-10 justify-end">
             <Button onClick={() => setCurrentStep(currentStep - 1)}>
