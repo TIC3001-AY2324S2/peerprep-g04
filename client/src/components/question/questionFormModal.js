@@ -92,7 +92,7 @@ export const QuestionFormModal = ({
   // ----------------------------------
   // RETURN BLOCK
   // ----------------------------------
- 
+
   return (
     <Modal show={show} size="4xl" onClose={onCancel} popup>
       <Modal.Header />
@@ -150,9 +150,9 @@ export const QuestionFormModal = ({
                       }
                     />
                   )}
-                  
-                />
 
+                />
+                {/* sample changes */}
                 {errors?.category && (
                   <small className="mt-2 text-sm text-red-600 dark:text-red-500">
                     {errors.category.message}
