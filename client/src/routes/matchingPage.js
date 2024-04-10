@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "../components/common/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 function CategorySelection({ setValue }) {
   const handleButtonClick = (category) => {
@@ -100,7 +101,7 @@ function ComplexitySelection({ setValue }) {
 }
 
 export default function MatchingPage() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   // ----------------------------------
   // FORM VALIDATIONS - with ZOD
   // ----------------------------------
@@ -109,9 +110,10 @@ export default function MatchingPage() {
     complexity: z.string().min(1, "Please select a complexity"),
   });
   const [currentStep, setCurrentStep] = useState(0);
+  const navigate = useNavigate();
   const initialFormValues = {
     status: "JOIN",
-    userId: user.userDetails._id,
+    userId: user ? user.userDetails._id : "",
     category: "",
     complexity: "",
     matchType: "SAME",
@@ -134,20 +136,33 @@ export default function MatchingPage() {
 
   return (
     <div className="w-full max-w-2xl">
-      <Stepper currentStep={currentStep} />
-      <pre>{JSON.stringify(watchAllFields, null, 2)}</pre>
-      <div className="flex flex-wrap gap-2 mt-10">
-        {currentStep === 0 && <CategorySelection setValue={setValue} />}
-        {currentStep === 1 && <ComplexitySelection setValue={setValue} />}
-        {currentStep === 2 && <>Review your selection</>}
-      </div>
-      <div className="flex flex-column mt-10 justify-end">
-        <Button onClick={() => setCurrentStep(currentStep - 1)}>Back</Button>
-        <Button onClick={() => setCurrentStep(currentStep + 1)}>
-          Next
-          <HiOutlineArrowRight className="ml-2 h-5 w-5" />
-        </Button>
-      </div>
+      {user ? (
+        <div>
+          <Stepper currentStep={currentStep} />
+          <pre>{JSON.stringify(watchAllFields, null, 2)}</pre>
+          <div className="flex flex-wrap gap-2 mt-10">
+            {currentStep === 0 && <CategorySelection setValue={setValue} />}
+            {currentStep === 1 && <ComplexitySelection setValue={setValue} />}
+            {currentStep === 2 && <>Review your selection</>}
+          </div>
+          <div className="flex flex-column mt-10 justify-end">
+            <Button onClick={() => setCurrentStep(currentStep - 1)}>
+              Back
+            </Button>
+            <Button onClick={() => setCurrentStep(currentStep + 1)}>
+              Next
+              <HiOutlineArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <Card className="p-4">
+            <h2 className="text-2xl font-bold">You are not logged in</h2>
+            <Button onClick={() => navigate("/auth")}>Log in</Button>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
