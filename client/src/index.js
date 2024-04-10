@@ -9,6 +9,7 @@ import { QuestionPage } from "./routes/questionPage";
 import ProfilePage from "./routes/profilePage";
 import RegisterPage from "./routes/registerPage";
 import QuestionDetailsPage from "./routes/questionDetailsPage";
+import MatchingPage from "./routes/matchingPage";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <ProfilePage />,
+      },
+      {
+        path: "/matching",
+        element: <MatchingPage />,
       },
     ],
   },

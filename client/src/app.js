@@ -19,10 +19,10 @@ function App() {
         <AuthProvider>
           <div className="flex flex-col min-h-screen">
             <NavBar />
-            <div className="flex flex-grow justify-center">
+            <div className="flex flex-col items-center justify-center mt-5 mb-10">
               <Outlet />
             </div>
-            <div className="mt-5">
+            <div className="mt-auto">
               <CustomFooter />
             </div>
           </div>
