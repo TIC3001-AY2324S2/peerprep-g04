@@ -160,11 +160,14 @@ export default function MatchingPage() {
       {user ? (
         <div>
           <Stepper currentStep={currentStep} />
-          <pre>{JSON.stringify(watchAllFields, null, 2)}</pre>
           <div className="flex flex-wrap gap-2 mt-10">
-            {currentStep === 0 && <CategorySelection setValue={setValue} />}
-            {currentStep === 1 && <ComplexitySelection setValue={setValue} />}
-            {currentStep === 2 && (
+            {!renderMatching && currentStep === 0 && (
+              <CategorySelection setValue={setValue} />
+            )}
+            {!renderMatching && currentStep === 1 && (
+              <ComplexitySelection setValue={setValue} />
+            )}
+            {!renderMatching && currentStep === 2 && (
               <>
                 <div>
                   <h1>Review your selection</h1>
@@ -173,27 +176,31 @@ export default function MatchingPage() {
                 </div>
               </>
             )}
-            {renderMatching && <MatchPolling userId={user.userDetails._id} />}
           </div>
-          <div className="flex flex-column mt-10 justify-end">
-            <Button onClick={() => setCurrentStep(currentStep - 1)}>
-              Back
-            </Button>
-            {currentStep !== 2 && (
-              <Button onClick={() => setCurrentStep(currentStep + 1)}>
-                Next
-                <HiOutlineArrowRight className="ml-2 h-5 w-5" />
+          {!renderMatching && (
+            <div className="flex flex-column mt-10 justify-end">
+              <Button onClick={() => setCurrentStep(currentStep - 1)}>
+                Back
               </Button>
-            )}
-            {currentStep === 2 && (
-              <Button onClick={handleSubmit(onSubmit)}>Join Queue</Button>
-            )}
-            {renderMatching && (
+              {currentStep !== 2 && (
+                <Button onClick={() => setCurrentStep(currentStep + 1)}>
+                  Next
+                  <HiOutlineArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              )}
+              {currentStep === 2 && (
+                <Button onClick={handleSubmit(onSubmit)}>Join Queue</Button>
+              )}
+            </div>
+          )}
+          {renderMatching && (
+            <>
+              <MatchPolling userId={user.userDetails._id} />
               <Button onClick={() => setRenderMatching(false)}>
                 Cancel Matching
               </Button>
-            )}
-          </div>
+            </>
+          )}
         </div>
       ) : (
         <div>

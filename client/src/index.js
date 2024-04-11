@@ -10,6 +10,7 @@ import ProfilePage from "./routes/profilePage";
 import RegisterPage from "./routes/registerPage";
 import QuestionDetailsPage from "./routes/questionDetailsPage";
 import MatchingPage from "./routes/matchingPage";
+import { MatchFoundDetails } from "./components/matcher/matchFoundDetails";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
       {
         path: "/matching",
         element: <MatchingPage />,
+      },
+      {
+        path: "/matchDetails",
+        element: <MatchFoundDetails />,
       },
     ],
   },
