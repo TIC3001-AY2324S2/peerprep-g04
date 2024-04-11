@@ -11,12 +11,8 @@ export const useJoinQueue = () => {
         `${process.env.REACT_APP_MATCHING_API_URL}/matching/joinQueue`,
         req
       );
-      return true;
     } catch (error) {
-      toast.error("Error joining Queue. Please try again.", {
-        autoClose: 500, // 5 seconds
-      });
-      return false;
+      throw error;
     }
   };
 
@@ -27,6 +23,11 @@ export const useJoinQueue = () => {
         autoClose: 500, // 5 seconds
       });
       queryClient.invalidateQueries(["joinQueue"]);
+    },
+    onError: () => {
+      toast.error("Error joining Queue. Please try again.", {
+        autoClose: 500, // 5 seconds
+      });
     },
   });
 };

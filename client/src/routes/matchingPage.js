@@ -9,6 +9,8 @@ import { useAuth } from "../components/common/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { useJoinQueue } from "../hooks/api/match/useJoinQueue";
 
+import { MatchPolling } from "../components/matcher/matchPolling";
+
 function CategorySelection({ setValue }) {
   const handleButtonClick = (category) => {
     setValue("category", category);
@@ -103,6 +105,7 @@ function ComplexitySelection({ setValue }) {
 
 export default function MatchingPage() {
   const [currentStep, setCurrentStep] = useState(0);
+  const [renderMatching, setRenderMatching] = useState(false);
   const navigate = useNavigate();
   const { user, isLoading } = useAuth();
   const { mutate: joinQueue } = useJoinQueue();
@@ -149,6 +152,7 @@ export default function MatchingPage() {
   const onSubmit = () => {
     const data = getValues();
     joinQueue({ data: data });
+    setRenderMatching(true);
   };
 
   return (
@@ -169,6 +173,7 @@ export default function MatchingPage() {
                 </div>
               </>
             )}
+            {renderMatching && <MatchPolling userId={user.userDetails._id} />}
           </div>
           <div className="flex flex-column mt-10 justify-end">
             <Button onClick={() => setCurrentStep(currentStep - 1)}>
@@ -182,6 +187,11 @@ export default function MatchingPage() {
             )}
             {currentStep === 2 && (
               <Button onClick={handleSubmit(onSubmit)}>Join Queue</Button>
+            )}
+            {renderMatching && (
+              <Button onClick={() => setRenderMatching(false)}>
+                Cancel Matching
+              </Button>
             )}
           </div>
         </div>

@@ -19,7 +19,6 @@ export async function getQuestions(req, res) {
 }
 
 export async function getQuestionById(req, res) {
-  console.log("GET QUESTION BY ID: ", req.query.id);
   const response = await _findQuestionById(req.query.id);
 
   if (response === null) {
@@ -91,11 +90,11 @@ export async function createQuestion(req, res) {
       if (resp.err) {
         return res.status(500).json({
           message:
-            "Could not create a new question due to internal server error."
+            "Could not create a new question due to internal server error.",
         });
       } else if (!resp) {
         return res.status(409).json({
-          message: "Duplicated question."
+          message: "Duplicated question.",
         });
       } else {
         console.log(`Created new question ${title} successfully!`);

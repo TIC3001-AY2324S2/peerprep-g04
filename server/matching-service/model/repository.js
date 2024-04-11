@@ -27,8 +27,10 @@ export async function getAllMatch(options) {
   return MatchingModel.find(options);
 }
 
-export async function findMatchById(id) {
-  return MatchingModel.findOne({ _id: id });
+export async function findMatchByUserId(userId) {
+  return MatchingModel.findOne({
+    $or: [{ userOne: userId }, { userTwo: userId }],
+  });
 }
 
 export async function createMatch(params) {

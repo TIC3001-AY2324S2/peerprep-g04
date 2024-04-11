@@ -8,11 +8,15 @@ const setupExchangesAndQueues = async (req, res, next) => {
 
   amqp.connect("amqp://localhost", function (error0, connection) {
     if (error0) {
-      throw error0;
+      console.error("Error connecting to RabbitMQ:", error0);
+      res.status(503).send("Service Unavailable");
+      return;
     }
     connection.createChannel(async function (error1, channel) {
       if (error1) {
-        throw error1;
+        console.error("Error creating channel:", error1);
+        res.status(503).send("Service Unavailable");
+        return;
       }
       try {
         channel.assertExchange(exchange_name, exchange_type, {
@@ -26,6 +30,7 @@ const setupExchangesAndQueues = async (req, res, next) => {
         next();
       } catch (e) {
         console.error(e);
+        res.status(500).send("Internal Server Error");
       }
     });
   });

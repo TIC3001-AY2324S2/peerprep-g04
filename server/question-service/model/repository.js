@@ -38,7 +38,7 @@ export async function findQuestionById(id) {
 }
 
 export async function findQuestionByTitle(title) {
-  return QuestionModel.findOne({title : title});
+  return QuestionModel.findOne({ title: title });
 }
 
 export async function updateQuestion(

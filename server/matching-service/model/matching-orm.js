@@ -2,7 +2,7 @@ import {
   getAllMatch,
   createMatch,
   deleteMatch,
-  findMatchById,
+  findMatchByUserId,
 } from "./repository.js";
 
 export async function ormGetAllMatch(options = "") {
@@ -63,9 +63,9 @@ export async function ormDeleteMatch(id) {
   }
 }
 
-export async function ormFindMatchById(id) {
+export async function ormFindMatchByUserId(userId) {
   try {
-    const result = await findMatchById(id);
+    const result = await findMatchByUserId(userId);
     if (result.length !== 0) {
       return result;
     }
