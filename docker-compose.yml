@@ -54,6 +54,27 @@ services:
     depends_on:
       - question_service_mongo_db
 
+  matching_service_mongo_db:
+    image: mongo:latest
+    container_name: matching_service_database
+    restart: always
+    volumes:
+      - matching_service_mongo_db:/data/db
+
+  mathing_service:
+    build: ./server/matching-service
+    container_name: matching_service
+    restart: always
+    ports: 
+      - 3003:3003
+    env_file:
+      - ./server/matching-service/.env
+    environment:
+      ENV: DOCKER
+    depends_on:
+      - matching_service_mongo_db
+
 volumes:
   user_service_mongo_db: {}
   question_service_mongo_db: {}
+  matching_service_mongo_db: {}
