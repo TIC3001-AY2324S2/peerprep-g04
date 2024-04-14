@@ -14,6 +14,16 @@ services:
     environment:
       ENV: DOCKER
 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - 5672:5672
+      - 15672:15672
+
   user_service_mongo_db:
     image: mongo:latest
     container_name: user_service_database
@@ -61,7 +71,7 @@ services:
     volumes:
       - matching_service_mongo_db:/data/db
 
-  mathing_service:
+  matching_service:
     build: ./server/matching-service
     container_name: matching_service
     restart: always

@@ -4,8 +4,9 @@ import { ormCreateMatch as _createMatch } from "../model/matching-orm.js";
 const publishToQueue = async (queueName, data) => {
   const exchange_name = "user-matching";
   const exchange_type = "fanout";
+  const amqpUrl = process.env.AMQP_URL;
 
-  amqp.connect("amqp://localhost", function (error0, connection) {
+  amqp.connect(amqpUrl, function (error0, connection) {
     if (error0) {
       throw error0;
     }

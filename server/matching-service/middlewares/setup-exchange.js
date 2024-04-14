@@ -5,8 +5,9 @@ const setupExchangesAndQueues = async (req, res, next) => {
   const queueName = data.category;
   const exchange_name = "user-matching";
   const exchange_type = "fanout";
-
-  amqp.connect("amqp://localhost", function (error0, connection) {
+  const amqpUrl = process.env.AMQP_URL;
+  
+  amqp.connect(amqpUrl, function (error0, connection) {
     if (error0) {
       console.error("Error connecting to RabbitMQ:", error0);
       res.status(503).send("Service Unavailable");

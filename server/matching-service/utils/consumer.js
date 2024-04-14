@@ -2,9 +2,10 @@ import amqp from "amqplib/callback_api.js";
 import { searchForMatch } from "./matcher.js";
 // Declare usersInQueueMap outside of the function
 let usersInQueueMap = new Map();
+const amqpUrl = process.env.AMQP_URL;
 
 const consumeFromQueue = async (queueName, callback) => {
-  amqp.connect("amqp://localhost", function (err, connection) {
+  amqp.connect(amqpUrl, function (err, connection) {
     if (err) {
       throw err;
     }
