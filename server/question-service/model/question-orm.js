@@ -56,7 +56,7 @@ export async function ormUpdateQuestion(
 ) {
   try {
     const validDuplicate = await findQuestionByTitle(title);
-    if (validDuplicate) {
+    if (validDuplicate && id != validDuplicate.id) {
       console.log("validDuplicate");
       console.log(validDuplicate);
       return false;
