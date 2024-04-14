@@ -11,6 +11,7 @@ import { useJoinQueue } from "../hooks/api/match/useJoinQueue";
 import { Spinner } from "flowbite-react";
 import { MatchPolling } from "../components/matcher/matchPolling";
 import { useGetFindMatchByUserId } from "../hooks/api/match/useGetFindMatchByUserId";
+import { Stopwatch } from "../components/common/Stopwatch";
 
 function CategorySelection({ setValue }) {
   const handleButtonClick = (category) => {
@@ -201,6 +202,7 @@ export default function MatchingPage() {
           )}
           {renderMatching && (
             <>
+              <Stopwatch />
               <MatchPolling userId={user?.userDetails._id} />
               <Button onClick={() => setRenderMatching(false)}>
                 Cancel Matching
