@@ -1,15 +1,16 @@
 import { useEffect } from "react";
 import { Button } from "flowbite-react";
-import { useGetFoundMatchByUserId } from "../../hooks/api/match/useGetFoundMatch";
+import { useGetPollMatchByUserId } from "../../hooks/api/match/useGetPollMatchByUserId";
 import { useNavigate } from "react-router-dom";
+import { RoundLoading } from "../common/roundLoading";
 
 export const MatchPolling = (userId, setRenderMatching) => {
   const navigate = useNavigate();
   const {
     data: foundMatch,
-    isLoading: isGetFindMatchLoading,
+    isLoading,
     setShouldFetch,
-  } = useGetFoundMatchByUserId(userId.userId);
+  } = useGetPollMatchByUserId(userId.userId);
 
   useEffect(() => {
     // Start the polling when the component is mounted
@@ -23,7 +24,7 @@ export const MatchPolling = (userId, setRenderMatching) => {
 
   return (
     <div>
-      <h1>Match Polling...</h1>
+      <RoundLoading />
       <pre> {JSON.stringify(foundMatch, null, 2)}</pre>
     </div>
   );

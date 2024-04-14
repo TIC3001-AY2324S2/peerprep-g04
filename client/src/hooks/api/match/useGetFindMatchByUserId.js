@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
-export const useGetFinddMatchByUserId = (userId) => {
+export const useGetFindMatchByUserId = (userId) => {
   const queryClient = useQueryClient();
 
   const getFindMatchByUserId = async () => {

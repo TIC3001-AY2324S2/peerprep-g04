@@ -8,8 +8,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "../components/common/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { useJoinQueue } from "../hooks/api/match/useJoinQueue";
-
+import { Spinner } from "flowbite-react";
 import { MatchPolling } from "../components/matcher/matchPolling";
+import { useGetFindMatchByUserId } from "../hooks/api/match/useGetFindMatchByUserId";
 
 function CategorySelection({ setValue }) {
   const handleButtonClick = (category) => {
@@ -107,7 +108,10 @@ export default function MatchingPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [renderMatching, setRenderMatching] = useState(false);
   const navigate = useNavigate();
-  const { user, isLoading } = useAuth();
+  const { user } = useAuth();
+  const userId = user?.userDetails._id;
+  const { data: isAlreadyMatched, isLoading: isLoadingFindAlreadyMatched } =
+    useGetFindMatchByUserId(userId);
   const { mutate: joinQueue } = useJoinQueue();
 
   // ----------------------------------
@@ -141,12 +145,12 @@ export default function MatchingPage() {
 
   useEffect(() => {
     if (user) {
-      setValue("userId", user.userDetails._id);
+      setValue("userId", user?.userDetails._id);
     }
   }, [user, setValue]);
 
-  if (isLoading) {
-    return <div>Loading...</div>; // or your custom loading component
+  if (isAlreadyMatched && !isLoadingFindAlreadyMatched) {
+    navigate("/matchDetails");
   }
 
   const onSubmit = () => {
@@ -178,10 +182,12 @@ export default function MatchingPage() {
             )}
           </div>
           {!renderMatching && (
-            <div className="flex flex-column mt-10 justify-end">
-              <Button onClick={() => setCurrentStep(currentStep - 1)}>
-                Back
-              </Button>
+            <div className="flex flex-column mt-10 justify-end gap-2">
+              {currentStep > 0 && (
+                <Button onClick={() => setCurrentStep(currentStep - 1)}>
+                  Back
+                </Button>
+              )}
               {currentStep !== 2 && (
                 <Button onClick={() => setCurrentStep(currentStep + 1)}>
                   Next
@@ -195,7 +201,7 @@ export default function MatchingPage() {
           )}
           {renderMatching && (
             <>
-              <MatchPolling userId={user.userDetails._id} />
+              <MatchPolling userId={user?.userDetails._id} />
               <Button onClick={() => setRenderMatching(false)}>
                 Cancel Matching
               </Button>
