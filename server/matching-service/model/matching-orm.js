@@ -28,6 +28,8 @@ export async function ormGetAllMatch(options = "") {
 export async function ormCreateMatch(
   userOne,
   userTwo = null,
+  userOneName,
+  userTwoName = null,
   roomKey = null,
   category,
   complexity
@@ -36,6 +38,8 @@ export async function ormCreateMatch(
     const newMatch = await createMatch({
       userOne,
       userTwo,
+      userOneName,
+      userTwoName,
       roomKey,
       category,
       complexity,

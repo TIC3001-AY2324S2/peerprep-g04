@@ -16,6 +16,7 @@ export const useGetFindMatchByUserId = (userId) => {
   return useQuery({
     queryKey: ["getFindMatchByUserId", userId],
     queryFn: getFindMatchByUserId,
+    cacheTime: 0,
     onSuccess: (_, req) => {
       queryClient.invalidateQueries(["getFindMatchByUserId", userId]);
     },

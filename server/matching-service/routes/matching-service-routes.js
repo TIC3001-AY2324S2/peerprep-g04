@@ -17,7 +17,7 @@ router.post("/createMatch", createMatch);
 
 router.post("/joinQueue", setupExchangesAndQueues, joinQueue);
 
-router.post("/deleteMatch", deleteMatch);
+router.delete("/deleteMatch", deleteMatch);
 
 router.get("/findMatch", findMatchByUserId);
 

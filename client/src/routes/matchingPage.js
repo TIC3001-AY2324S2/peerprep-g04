@@ -126,6 +126,7 @@ export default function MatchingPage() {
   const initialFormValues = {
     status: "JOIN",
     userId: "",
+    userName: "",
     category: "",
     complexity: "",
     matchType: "SAME",
@@ -147,6 +148,7 @@ export default function MatchingPage() {
   useEffect(() => {
     if (user) {
       setValue("userId", user?.userDetails._id);
+      setValue("userName", user?.userDetails.username);
     }
   }, [user, setValue]);
 
@@ -176,6 +178,8 @@ export default function MatchingPage() {
               <>
                 <div>
                   <h1>Review your selection</h1>
+                  <pre>{JSON.stringify(watchAllFields, null, 2)}</pre>
+                  <h2>Name: {watchAllFields.userName}</h2>
                   <h2>Category: {watchAllFields.category}</h2>
                   <h2>Complexity: {watchAllFields.complexity}</h2>
                 </div>

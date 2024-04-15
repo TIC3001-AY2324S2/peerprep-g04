@@ -10,6 +10,14 @@ const MatchingModelSchema = mongoose.Schema(
       type: String,
       required: [false],
     },
+    userOneName: {
+      type: String,
+      required: [false],
+    },
+    userTwoName: {
+      type: String,
+      required: [false],
+    },
     roomKey: {
       type: String,
       required: [false],

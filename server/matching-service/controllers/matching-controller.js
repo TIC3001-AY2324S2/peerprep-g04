@@ -7,11 +7,21 @@ import consumeFromQueue from "../utils/consumer.js";
 
 export async function createMatch(req, res) {
   try {
-    const { userOne, userTwo, roomKey, category, complexity } = req.body;
+    const {
+      userOne,
+      userOneName,
+      userTwo,
+      userTwoName,
+      roomKey,
+      category,
+      complexity,
+    } = req.body;
     if (userOne && category && complexity) {
       const resp = await _createMatch(
         userOne,
+        userOneName,
         userTwo,
+        userTwoName,
         roomKey,
         category,
         complexity
@@ -96,6 +106,7 @@ export async function joinQueue(req, res) {
       !data ||
       !data.status ||
       !data.userId ||
+      !data.userName ||
       !data.category ||
       !data.complexity ||
       !data.matchType

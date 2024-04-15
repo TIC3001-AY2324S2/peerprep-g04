@@ -31,9 +31,9 @@ const consumeFromQueue = async (queueName, callback) => {
             usersInQueueMap.size > 0 &&
               usersInQueueMap.forEach((value, key) => {
                 console.log(
-                  `User ID: ${key}, Message: ${
-                    JSON.parse(value.content).status
-                  }`
+                  `User ID: ${key}, Message: ${JSON.stringify(
+                    JSON.parse(value.content.toString())
+                  )}`
                 );
               });
 
