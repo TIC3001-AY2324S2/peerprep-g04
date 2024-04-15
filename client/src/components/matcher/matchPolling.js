@@ -25,7 +25,6 @@ export const MatchPolling = (userId, setRenderMatching) => {
   return (
     <div>
       <RoundLoading />
-      <pre> {JSON.stringify(foundMatch, null, 2)}</pre>
     </div>
   );
 };

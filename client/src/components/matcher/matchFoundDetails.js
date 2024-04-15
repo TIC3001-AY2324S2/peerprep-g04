@@ -94,11 +94,11 @@ export const MatchFoundDetails = () => {
     );
   };
 
-  useEffect(() => {
-    if (!data) {
-      navigate("/matching");
-    }
-  }, [data, navigate]);
+  if (!isLoading && !data) {
+    navigate("/matching");
+  } else if (isLoading) {
+    return <Spinner />;
+  }
 
   const handleDelete = async () => {
     deleteMatch(data.data._id);
