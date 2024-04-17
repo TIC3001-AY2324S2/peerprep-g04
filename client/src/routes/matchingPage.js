@@ -205,7 +205,10 @@ export default function MatchingPage() {
           )}
           {renderMatching && (
             <>
-              <Stopwatch />
+               <Stopwatch 
+                onTimeReached={() => setRenderMatching(false)} 
+                targetTime={30}
+              />
               <MatchPolling userId={user?.userDetails._id} />
               <Button>Match with any difficulty</Button>
               <Button onClick={() => setRenderMatching(false)}>
