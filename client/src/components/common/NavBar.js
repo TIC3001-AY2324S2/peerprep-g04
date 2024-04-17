@@ -26,7 +26,9 @@ export const NavBar = () => {
             {user.userDetails.email}
           </span>
         </Dropdown.Header>
-        <Dropdown.Item>Dashboard</Dropdown.Item>
+          <Dropdown.Item>
+            <Link to="/profile">Dashboard</Link>
+          </Dropdown.Item>
         <Dropdown.Item onClick={() => logout()}>Sign out</Dropdown.Item>
       </Dropdown>
     );

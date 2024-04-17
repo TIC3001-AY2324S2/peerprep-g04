@@ -1,23 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-// IM NOT ABLE TO THINK OF HOW TO DO A REFETCH...SO I CANT USE THIS IN AUTH
-
-export const useGetUserInfo = (accessToken, email) => {
-  const getUserInfo = async (req) => {
+export const useGetUserInfo = (email) => {
+  const getUserInfo = async () => {
     const { data } = await axios.get(
-      `${process.env.REACT_APP_USER_API_URL}/users`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        params: {
-          email,
-        },
-      },
-      {
-        enabled: !!email && !!accessToken,
-      }
+      `${process.env.REACT_APP_USER_API_URL}/users/profile`,
+      {params: {email}}
     );
     return data;
   };

@@ -28,7 +28,7 @@ router.get("/all", verifyAccessToken, verifyIsAdmin, getAllUsers);
 
 router.get("/", verifyAccessToken, verifyEmail, getUserByEmail);
 
-router.get("/:email", verifyAccessToken, verifyEmail, getUserByEmail);
+router.get("/profile", getUserByEmail);
 
 router.post("/", createUser);
 

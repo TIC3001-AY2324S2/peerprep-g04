@@ -24,6 +24,11 @@ let UserModelSchema = new Schema(
       required: true,
       default: false,
     },
+    solvedQuestions: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
   },
   {
     timestamps: true,
