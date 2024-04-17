@@ -11,6 +11,7 @@ import RegisterPage from "./routes/registerPage";
 import QuestionDetailsPage from "./routes/questionDetailsPage";
 import MatchingPage from "./routes/matchingPage";
 import { MatchFoundDetails } from "./components/matcher/matchFoundDetails";
+import UserPage from "./routes/userPage";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
       {
         path: "/matchDetails",
         element: <MatchFoundDetails />,
+      },
+      {
+        path: "/user",
+        element: <UserPage />,
       },
     ],
   },

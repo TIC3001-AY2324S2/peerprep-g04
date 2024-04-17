@@ -109,14 +109,11 @@ export async function getUserByEmail(req, res) {
 
 export async function updateUser(req, res) {
   try {
-    const { id, username, email, password } = req.body;
+    const { id, username, email, solvedQuestions, isAdmin} = req.body;
 
-    const salt = bcryptjs.genSaltSync(10);
-    const hashedPassword = bcryptjs.hashSync(password, salt);
-
-    if (id && username && email && hashedPassword) {
+    if (id && username && email) {
       console.log(`UPDATE USER: ID Obtained: ${id}`);
-      const response = await _updateUser(id, username, email, hashedPassword);
+      const response = await _updateUser(id, username, email, solvedQuestions, isAdmin);
       console.log(response);
       if (response.err) {
         return res.status(409).json({
@@ -136,14 +133,14 @@ export async function updateUser(req, res) {
       }
     } else {
       return res.status(400).json({
-        message: "id and/or Username and/or Email and/or Password are missing!",
+        message: "id and/or Username and/or Email are missing!",
       });
     }
   } catch (err) {
     console.log(err);
     return res.status(500).json({
       message:
-        "Database failure when updating user! (Possibly Missing Password field)",
+        "Database failure when updating user!",
     });
   }
 }
@@ -200,6 +197,50 @@ export async function getAllUsers(req, res) {
     return res.status(200).json({
       message: `Found users!`,
       users: response,
+    });
+  }
+}
+
+export async function getPaginatedUsers(req, res) {
+  try {
+    const page = req.query.page;
+    const limit = req.query.limit;
+    const search = req.query.search ? req.query.search : "";
+    const allUsers = await _findAllUsers(search);
+    const userCount = allUsers?.length || 0;
+
+    const startIndex = (page - 1) * limit;
+    const lastIndex = page * limit;
+
+    const results = {};
+    if (allUsers) {
+      results.total = userCount;
+      results.pageCount = allUsers?.length
+        ? Math.ceil(allUsers?.length / limit)
+        : 0;
+
+      if (lastIndex < userCount) {
+        results.next = {
+          page: parseInt(page) + 1,
+          limit: parseInt(limit),
+        };
+      }
+
+      if (startIndex > 0) {
+        results.previous = {
+          page: parseInt(page) - 1,
+          limit: parseInt(limit),
+        };
+      }
+
+      results.result = allUsers?.slice(startIndex, lastIndex) || allUsers;
+    }
+
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      message: "An error occurred while fetching paginated users.",
     });
   }
 }

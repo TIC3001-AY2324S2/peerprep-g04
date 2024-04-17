@@ -29,6 +29,9 @@ export const NavBar = () => {
           <Dropdown.Item>
             <Link to="/profile">Dashboard</Link>
           </Dropdown.Item>
+          <Dropdown.Item>
+          {user.userDetails.isAdmin ? (<Link to="/user">User Management</Link>) : null}
+          </Dropdown.Item>
         <Dropdown.Item onClick={() => logout()}>Sign out</Dropdown.Item>
       </Dropdown>
     );

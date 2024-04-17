@@ -36,14 +36,15 @@ export async function findUserByEmail(email) {
   return UserModel.findOne({ email: email });
 }
 
-export async function updateUser(id, username, email, password) {
+export async function updateUser(id, username, email, solvedQuestions, isAdmin) {
   return UserModel.updateOne(
     { _id: id },
     {
       $set: {
         username: username,
         email: email,
-        password: password,
+        solvedQuestions: solvedQuestions,
+        isAdmin: isAdmin
       },
     }
   );

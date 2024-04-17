@@ -7,6 +7,7 @@ import {
   getUserByEmail,
   updateUser,
   updateUserPrivilege,
+  getPaginatedUsers
 } from "../controller/user-controller.js";
 import {
   verifyAccessToken,
@@ -17,14 +18,11 @@ import {
 
 const router = express.Router();
 
-router.patch(
-  "/update-privilege",
-  verifyAccessToken,
-  verifyIsAdmin,
-  updateUserPrivilege
-);
+router.patch("/update-privilege", updateUserPrivilege);
 
-router.get("/all", verifyAccessToken, verifyIsAdmin, getAllUsers);
+router.get("/all", getAllUsers);
+
+router.get("/paginatedUsers", getPaginatedUsers);
 
 router.get("/", verifyAccessToken, verifyEmail, getUserByEmail);
 
@@ -32,8 +30,8 @@ router.get("/profile", getUserByEmail);
 
 router.post("/", createUser);
 
-router.patch("/", verifyAccessToken, verifyId, updateUser);
+router.patch("/", updateUser);
 
-router.delete("/", verifyAccessToken, verifyEmail, deleteUser);
+router.delete("/", deleteUser);
 
 export default router;

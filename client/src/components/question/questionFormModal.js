@@ -81,6 +81,7 @@ export const QuestionFormModal = ({
     } else {
       res = await createQuestion(data);
     }
+    console.log(res);
     if (res) {
       setOpenQuestionFormModal(false);
       reset();

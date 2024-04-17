@@ -51,9 +51,9 @@ export async function ormFindUserByEmail(email) {
   }
 }
 
-export async function ormUpdateUser(id, username, email, password) {
+export async function ormUpdateUser(id, username, email, solvedQuestions, isAdmin) {
   try {
-    const result = await updateUser(id, username, email, password);
+    const result = await updateUser(id, username, email, solvedQuestions, isAdmin);
     console.log(result);
 
     // Checking if User Details Modified
