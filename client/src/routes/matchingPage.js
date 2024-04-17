@@ -143,7 +143,7 @@ export default function MatchingPage() {
     defaultValues: initialFormValues,
   });
 
-  const watchAllFields = watch();
+  const formData = watch();
 
   useEffect(() => {
     if (user) {
@@ -162,6 +162,13 @@ export default function MatchingPage() {
     setRenderMatching(true);
   };
 
+  const onLeave = () => {
+    const data = getValues();
+    data.status = "LEAVE";
+    joinQueue({ data: data });
+    setRenderMatching(false);
+  };
+
   return (
     <div className="w-full max-w-2xl">
       {user ? (
@@ -169,18 +176,18 @@ export default function MatchingPage() {
           <Stepper currentStep={currentStep} />
           <div className="flex flex-wrap gap-2 mt-10">
             {!renderMatching && currentStep === 0 && (
-              <CategorySelection setValue={setValue} />
+              <CategorySelection setValue={setValue} formState={formData} />
             )}
             {!renderMatching && currentStep === 1 && (
-              <ComplexitySelection setValue={setValue} />
+              <ComplexitySelection setValue={setValue} formState={formData} />
             )}
             {!renderMatching && currentStep === 2 && (
               <>
                 <div>
                   <h1>Review your selection</h1>
-                  <h2>Name: {watchAllFields.userName}</h2>
-                  <h2>Category: {watchAllFields.category}</h2>
-                  <h2>Complexity: {watchAllFields.complexity}</h2>
+                  <h2>Name: {formData.userName}</h2>
+                  <h2>Category: {formData.category}</h2>
+                  <h2>Complexity: {formData.complexity}</h2>
                 </div>
               </>
             )}
@@ -205,15 +212,17 @@ export default function MatchingPage() {
           )}
           {renderMatching && (
             <>
-               <Stopwatch 
-                onTimeReached={() => setRenderMatching(false)} 
+              <Stopwatch
+                onTimeReached={() => setRenderMatching(false)}
                 targetTime={30}
               />
-              <MatchPolling userId={user?.userDetails._id} />
-              <Button>Match with any difficulty</Button>
-              <Button onClick={() => setRenderMatching(false)}>
-                Cancel Matching
-              </Button>
+              <MatchPolling
+                userId={user?.userDetails._id}
+                formData={formData}
+              />
+              <div className="flex flex-column mt-10 justify-end gap-2">
+                <Button onClick={handleSubmit(onLeave)}>Cancel Matching</Button>
+              </div>
             </>
           )}
         </div>

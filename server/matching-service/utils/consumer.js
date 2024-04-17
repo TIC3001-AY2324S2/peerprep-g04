@@ -54,6 +54,21 @@ const consumeFromQueue = async (queueName, callback) => {
                 await searchForMatch(message.userId, usersInQueueMap, true);
               }
             }
+          } else if (message.status.toUpperCase() === "LEAVE") {
+            console.log(message.userId + " " + message.status);
+            console.log(usersInQueueMap.size - 1 + " users left in queue");
+            channel.ack(msg);
+            try {
+              usersInQueueMap.delete(message.userId);
+            } catch (error) {
+              console.error("Error deleting user from map:", error);
+              // Handle the error appropriately
+              setTimeout(() => {
+                channel.close();
+                connection.close();
+                console.log("Connection closed.");
+              }, 5000);
+            }
           } else if (message.status.toUpperCase() === "MATCHED") {
             console.log(
               message.userId + " " + message.userTwoId + " " + message.status

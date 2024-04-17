@@ -101,7 +101,10 @@ export async function joinQueue(req, res) {
   const data = req.body.data;
   const queueName = data.category;
 
-  if (data.status && data.status.toUpperCase() === "JOIN") {
+  if (
+    (data.status && data.status.toUpperCase() === "JOIN") ||
+    data.status.toUpperCase() === "LEAVE"
+  ) {
     if (
       !data ||
       !data.status ||
