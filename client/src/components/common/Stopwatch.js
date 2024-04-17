@@ -1,22 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from "react";
+import { toast } from "react-toastify";
 
 export const Stopwatch = ({ onTimeReached, targetTime }) => {
   const [time, setTime] = useState(0);
+  const hasReachedTime = useRef(false); // Add this ref
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setTime((time) => {
-        // Only call onTimeReached if targetTime is defined and it's the correct time
-        if (targetTime && time === targetTime - 1) {
-          if (onTimeReached) {
+      setTime((prevTime) => {
+        const newTime = prevTime + 1;
+        if (targetTime && newTime === targetTime) {
+          clearInterval(intervalId);
+          if (onTimeReached && !hasReachedTime.current) {
+            hasReachedTime.current = true; // Set the ref to true
             onTimeReached();
           }
         }
-        return time + 1;
+        return newTime;
       });
     }, 1000);
 
-    // Clean up the interval on component unmount
     return () => clearInterval(intervalId);
   }, [targetTime, onTimeReached]);
 
@@ -33,4 +36,3 @@ export const Stopwatch = ({ onTimeReached, targetTime }) => {
     </div>
   );
 };
-

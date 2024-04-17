@@ -19,9 +19,6 @@ export const useJoinQueue = () => {
   return useMutation({
     mutationFn: (req) => joinQueue(req),
     onSuccess: (_, req) => {
-      toast.success("Joined Queue.", {
-        autoClose: 500, // 5 seconds
-      });
       queryClient.invalidateQueries(["joinQueue"]);
     },
     onError: () => {

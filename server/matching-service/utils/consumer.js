@@ -56,7 +56,6 @@ const consumeFromQueue = async (queueName, callback) => {
             }
           } else if (message.status.toUpperCase() === "LEAVE") {
             console.log(message.userId + " " + message.status);
-            console.log(usersInQueueMap.size - 1 + " users left in queue");
             channel.ack(msg);
             try {
               usersInQueueMap.delete(message.userId);

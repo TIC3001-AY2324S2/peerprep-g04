@@ -12,6 +12,7 @@ import { Spinner } from "flowbite-react";
 import { MatchPolling } from "../components/matcher/matchPolling";
 import { useGetFindMatchByUserId } from "../hooks/api/match/useGetFindMatchByUserId";
 import { Stopwatch } from "../components/common/Stopwatch";
+import { toast } from "react-toastify";
 
 function CategorySelection({ setValue }) {
   const handleButtonClick = (category) => {
@@ -158,13 +159,25 @@ export default function MatchingPage() {
 
   const onSubmit = () => {
     const data = getValues();
+    toast.success("Joined Queue.", {
+      autoClose: 500, // 5 seconds
+    });
     joinQueue({ data: data });
     setRenderMatching(true);
   };
 
-  const onLeave = () => {
+  const onLeave = (isTimeout = false) => {
     const data = getValues();
     data.status = "LEAVE";
+    if (!isTimeout) {
+      toast.info("Left queue.", {
+        autoClose: 500, // 5 seconds
+      });
+    } else {
+      toast.error("Matching timed out. Leaving queue.", {
+        autoClose: 500, // 5 seconds
+      });
+    }
     joinQueue({ data: data });
     setRenderMatching(false);
   };
@@ -213,7 +226,7 @@ export default function MatchingPage() {
           {renderMatching && (
             <>
               <Stopwatch
-                onTimeReached={() => setRenderMatching(false)}
+                onTimeReached={handleSubmit(() => onLeave(true))}
                 targetTime={30}
               />
               <MatchPolling
@@ -221,7 +234,9 @@ export default function MatchingPage() {
                 formData={formData}
               />
               <div className="flex flex-column mt-10 justify-end gap-2">
-                <Button onClick={handleSubmit(onLeave)}>Cancel Matching</Button>
+                <Button onClick={handleSubmit(() => onLeave(false))}>
+                  Cancel Matching
+                </Button>
               </div>
             </>
           )}
