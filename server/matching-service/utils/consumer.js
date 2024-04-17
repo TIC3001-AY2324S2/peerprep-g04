@@ -61,12 +61,6 @@ const consumeFromQueue = async (queueName, callback) => {
               usersInQueueMap.delete(message.userId);
             } catch (error) {
               console.error("Error deleting user from map:", error);
-              // Handle the error appropriately
-              setTimeout(() => {
-                channel.close();
-                connection.close();
-                console.log("Connection closed.");
-              }, 5000);
             }
           } else if (message.status.toUpperCase() === "MATCHED") {
             console.log(
