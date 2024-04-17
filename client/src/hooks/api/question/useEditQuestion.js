@@ -7,7 +7,7 @@ export const useEditQuestion = () => {
 
   const editQuestion = async ({ data, id }) => {
     try {
-      await axios.patch(
+      return await axios.patch(
       `${process.env.REACT_APP_QUESTION_API_URL}/questions`,
       {
         ...data, // Spread the form data
