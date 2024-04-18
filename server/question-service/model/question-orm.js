@@ -4,6 +4,7 @@ import {
   findAllQuestions,
   findQuestionById,
   updateQuestion,
+  findQuestionByTitle,
 } from "./repository.js";
 
 export async function ormCreateQuestion(
@@ -13,6 +14,10 @@ export async function ormCreateQuestion(
   complexity
 ) {
   try {
+    const validDuplicate = await findQuestionByTitle(title);
+    if (validDuplicate) {
+      return false;
+    }
     const newQuestion = await createQuestion({
       title,
       description,
@@ -22,7 +27,7 @@ export async function ormCreateQuestion(
     await newQuestion.save();
     return true;
   } catch (err) {
-    console.log("ERROR: Could not create new question");
+    console.log("ERROR: Failed to create question.");
     return { err };
   }
 }
@@ -50,6 +55,12 @@ export async function ormUpdateQuestion(
   complexity
 ) {
   try {
+    const validDuplicate = await findQuestionByTitle(title);
+    if (validDuplicate && id != validDuplicate.id) {
+      console.log("validDuplicate");
+      console.log(validDuplicate);
+      return false;
+    }
     const result = await updateQuestion(
       id,
       title,
@@ -59,10 +70,12 @@ export async function ormUpdateQuestion(
     );
     console.log(result);
 
-    // Checking if Question  Modified
+    // Commented out because we assume all requests are from front-end and thus question Id is correctly provided
+    /*
+    // Checking if Question Modified
     if (result.modifiedCount === 0) {
       return false;
-    }
+    }*/
 
     return true;
   } catch (err) {
@@ -87,9 +100,37 @@ export async function ormFindAllQuestions(search = "") {
   }
 }
 
+export async function ormFindAllCategories() {
+  try {
+    const result = await findAllQuestions();
+    if (result.length !== 0) {
+      const categories = [].concat(
+        ...result.map((question) => JSON.parse(question.category))
+      );
+      const uniqueCategories = [...new Set(categories)];
+      return uniqueCategories;
+    }
+    return null;
+  } catch (err) {
+    return { err };
+  }
+}
+
 export async function ormFindQuestionById(id) {
   try {
     const result = await findQuestionById(id);
+    if (result.length !== 0) {
+      return result;
+    }
+    return null;
+  } catch (err) {
+    return { err };
+  }
+}
+
+export async function ormVlidateDuplicationByTitle(title) {
+  try {
+    const result = await findQuestionByTitle(title);
     if (result.length !== 0) {
       return result;
     }

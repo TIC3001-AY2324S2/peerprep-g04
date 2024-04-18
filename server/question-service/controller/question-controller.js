@@ -2,6 +2,7 @@ import { ormFindAllQuestions as _findAllQuestions } from "../model/question-orm.
 import { ormCreateQuestion as _createQuestion } from "../model/question-orm.js";
 import { ormDeleteQuestion as _deleteQuestion } from "../model/question-orm.js";
 import { ormUpdateQuestion as _updateQuestion } from "../model/question-orm.js";
+import { ormFindAllCategories as _findAllCategories } from "../model/question-orm.js";
 import { ormFindQuestionById as _findQuestionById } from "../model/question-orm.js";
 
 export async function getQuestions(req, res) {
@@ -18,8 +19,21 @@ export async function getQuestions(req, res) {
   }
 }
 
+export async function getAllCategories(req, res) {
+  const response = await _findAllCategories();
+
+  if (response === null) {
+    return res.status(204).json({ message: `No categories exist!` });
+  } else if (response.err) {
+    return res.status(204).json({ message: "Could not find categories!" });
+  } else {
+    return res.status(200).json({
+      data: response,
+    });
+  }
+}
+
 export async function getQuestionById(req, res) {
-  console.log("GET QUESTION BY ID: ", req.query.id);
   const response = await _findQuestionById(req.query.id);
 
   if (response === null) {
@@ -65,7 +79,8 @@ export async function getPaginatedQuestions(req, res) {
         };
       }
 
-      results.result = allQuestions.slice(startIndex, lastIndex);
+      results.result =
+        allQuestions?.slice(startIndex, lastIndex) || allQuestions;
     }
 
     res.json(results);
@@ -87,11 +102,14 @@ export async function createQuestion(req, res) {
         category,
         complexity
       );
-
       if (resp.err) {
-        return res.status(409).json({
+        return res.status(500).json({
           message:
-            "Could not create a new question! (Possibly question Already Exists!)",
+            "Could not create a new question due to internal server error.",
+        });
+      } else if (!resp) {
+        return res.status(409).json({
+          message: "Duplicated question.",
         });
       } else {
         console.log(`Created new question ${title} successfully!`);
@@ -129,10 +147,9 @@ export async function updateQuestion(req, res) {
           message: response.err.message,
         });
       } else if (!response) {
-        console.log(`question with id: ${id} not found!`);
-        return res
-          .status(404)
-          .json({ message: `Question with id: ${id} not found!` });
+        //console.log(`question with id: ${id} not found!`);
+        //return res.status(404).json({ message: `Question with id: ${id} not found!` });
+        return res.status(409).json({ message: `Duplicated question title.` });
       } else {
         console.log(`Question with id: ${id} found!`);
         return res.status(200).json({

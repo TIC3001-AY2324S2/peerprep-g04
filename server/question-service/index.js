@@ -4,8 +4,6 @@ import "dotenv/config.js"; //temp, move this to repo
 
 import questionRoutes from "./routes/question-service-routes.js";
 
-import QuestionModel from "./model/question-model.js";
-
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
