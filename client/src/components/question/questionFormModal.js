@@ -33,20 +33,33 @@ export const QuestionFormModal = ({
   // ----------------------------------
   // FORM SETUP
   // ----------------------------------
+  const initialCategoryForSelectBox =
+    isEdit && selectedQuestion
+      ? JSON.parse(selectedQuestion.category).map((category) => ({
+          value: category,
+          label: category,
+        }))
+      : [];
+
+  const initialCategory =
+    isEdit && selectedQuestion
+      ? JSON.parse(selectedQuestion.category).map((category) => category)
+      : [];
+
   const initialFormValues =
     isEdit && selectedQuestion
       ? {
-        title: selectedQuestion.title,
-        category: selectedQuestion.category,
-        complexity: selectedQuestion.complexity,
-        description: selectedQuestion.description,
-      }
+          title: selectedQuestion.title,
+          category: initialCategory,
+          complexity: selectedQuestion.complexity,
+          description: selectedQuestion.description,
+        }
       : {
-        title: "",
-        category: "",
-        complexity: "Easy",
-        description: "",
-      };
+          title: "",
+          category: "",
+          complexity: "Easy",
+          description: "",
+        };
 
   const {
     register,
@@ -142,6 +155,7 @@ export const QuestionFormModal = ({
                       options={options}
                       onBlur={onBlur}
                       name={name}
+                      defaultValue={initialCategoryForSelectBox}
                       value={
                         formState.values &&
                         formState.values[name].map((val) =>
@@ -153,7 +167,6 @@ export const QuestionFormModal = ({
                       }
                     />
                   )}
-
                 />
                 {/* sample changes */}
                 {/* test */}
