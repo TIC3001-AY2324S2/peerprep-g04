@@ -44,14 +44,6 @@ const router = createBrowserRouter([
         element: <ProfilePage />,
       },
       {
-        path: "/matching",
-        element: <MatchingPage />,
-      },
-      {
-        path: "/matchDetails",
-        element: <MatchFoundDetails />,
-      },
-      {
         path: "/user",
         element: <UserPage />,
       },

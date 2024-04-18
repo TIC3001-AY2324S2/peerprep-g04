@@ -14,14 +14,6 @@ services:
     environment:
       ENV: DOCKER
 
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    ports:
-      - 5672:5672
-      - 15672:15672
-    restart: always
-
   user_service_mongo_db:
     image: mongo:latest
     container_name: user_service_database
@@ -62,28 +54,6 @@ services:
     depends_on:
       - question_service_mongo_db
 
-  matching_service_mongo_db:
-    image: mongo:latest
-    container_name: matching_service_database
-    restart: always
-    volumes:
-      - matching_service_mongo_db:/data/db
-
-  matching_service:
-    build: ./server/matching-service
-    container_name: matching_service
-    restart: always
-    ports: 
-      - 3003:3003
-    env_file:
-      - ./server/matching-service/.env
-    environment:
-      ENV: DOCKER
-    depends_on:
-      - matching_service_mongo_db
-      - rabbitmq
-
 volumes:
   user_service_mongo_db: {}
   question_service_mongo_db: {}
-  matching_service_mongo_db: {}
