@@ -4,6 +4,7 @@ import { useCreateQuestion } from "../../hooks/api/question/useCreateQuestion";
 import { useEditQuestion } from "../../hooks/api/question/useEditQuestion";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useGetAllCategoriesData } from "../../hooks/api/question/useGetAllCategories";
 import CreatableSelect from "react-select/creatable";
 import {
   Button,
@@ -75,17 +76,21 @@ export const QuestionFormModal = ({
 
   const watchAllFields = watch();
 
-  const options = [
-    { value: "Array", label: "Array" },
-    { value: "String", label: "String" },
-    { value: "Algorithm", label: "Algorithm" },
-  ];
-
   // ----------------------------------
   // SUBMIT HOOK
   // ----------------------------------
   const { mutateAsync: createQuestion } = useCreateQuestion();
   const { mutateAsync: editQuestion } = useEditQuestion();
+  const { data: allCategoriesData, isLoading: isLoadingAllCategories } =
+    useGetAllCategoriesData();
+
+  const options =
+    (!isLoadingAllCategories &&
+      allCategoriesData?.data.map((category) => ({
+        value: category,
+        label: category,
+      }))) ||
+    [];
 
   const onSubmit = async (data) => {
     let res = true;
