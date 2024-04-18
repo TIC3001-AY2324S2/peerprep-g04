@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useEffect, useRef } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -38,6 +44,7 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.userObj);
   const lastToken = useRef();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const accessToken = Cookies.get("accessToken");
@@ -46,6 +53,7 @@ export const AuthProvider = ({ children }) => {
       const decodedJwt = parseJwt(Cookies.get("accessToken"));
 
       const fetchUserDetails = async () => {
+        setIsLoading(true);
         try {
           const response = await axios.get(
             `${process.env.REACT_APP_USER_API_URL}/users`,
@@ -64,6 +72,7 @@ export const AuthProvider = ({ children }) => {
           dispatch(clearUser());
           Cookies.remove("accessToken");
         }
+        setIsLoading(false);
       };
 
       fetchUserDetails();
@@ -84,7 +93,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
