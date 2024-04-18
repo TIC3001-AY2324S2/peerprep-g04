@@ -154,7 +154,9 @@ export default function MatchingPage() {
   }, [user, setValue]);
 
   if (isAlreadyMatched && !isLoadingFindAlreadyMatched) {
-    setShouldRunStopwatch(false);  // Immediately stop the stopwatch
+    <Stopwatch
+        stopwatchRunning={false}
+      />
     navigate("/matchDetails");
   }
 
@@ -229,6 +231,7 @@ export default function MatchingPage() {
               <Stopwatch
                 onTimeReached={handleSubmit(() => onLeave(true))}
                 targetTime={30}
+                stopwatchRunning={true}
               />
               <MatchPolling
                 userId={user?.userDetails._id}
