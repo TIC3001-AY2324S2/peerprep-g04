@@ -36,7 +36,7 @@ export const QuestionFormModal = ({
   // ----------------------------------
   const initialCategoryForSelectBox =
     isEdit && selectedQuestion
-      ? JSON.parse(selectedQuestion.category).map((category) => ({
+      ? JSON.parse(selectedQuestion?.category)?.map((category) => ({
           value: category,
           label: category,
         }))
@@ -44,7 +44,7 @@ export const QuestionFormModal = ({
 
   const initialCategory =
     isEdit && selectedQuestion
-      ? JSON.parse(selectedQuestion.category).map((category) => category)
+      ? JSON.parse(selectedQuestion?.category)?.map((category) => category)
       : [];
 
   const initialFormValues =
@@ -86,7 +86,7 @@ export const QuestionFormModal = ({
 
   const options =
     (!isLoadingAllCategories &&
-      allCategoriesData?.data.map((category) => ({
+      allCategoriesData?.data?.map((category) => ({
         value: category,
         label: category,
       }))) ||
@@ -168,7 +168,7 @@ export const QuestionFormModal = ({
                         )
                       }
                       onChange={(option) =>
-                        onChange(option ? option.map((o) => o.value) : [])
+                        onChange(option ? option?.map((o) => o.value) : [])
                       }
                     />
                   )}
