@@ -56,7 +56,7 @@ export async function deleteMatch(req, res) {
     if (id) {
       const resp = await _deleteMatch(id);
       if (resp === false) {
-        return res.status(404).json({
+        return res.status(204).json({
           message: "Could not delete Match! (Possibly Match does not exist!)",
         });
       } else {

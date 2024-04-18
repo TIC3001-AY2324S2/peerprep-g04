@@ -15,88 +15,54 @@ import { Stopwatch } from "../components/common/Stopwatch";
 import { toast } from "react-toastify";
 
 function CategorySelection({ setValue }) {
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
   const handleButtonClick = (category) => {
     setValue("category", category);
+    setSelectedCategory(category);
   };
 
   return (
     <div className="flex flex-wrap gap-2">
       <Button
-        outline
+        className="focus:ring-0 focus:ring-offset-0"
+        outline={selectedCategory !== "Array"}
         gradientDuoTone="purpleToBlue"
         onClick={() => handleButtonClick("Array")}
       >
         Array
       </Button>
-      <Button
-        outline
-        gradientDuoTone="cyanToBlue"
-        onClick={() => handleButtonClick("String")}
-      >
-        String
-      </Button>
-      <Button
-        outline
-        gradientDuoTone="greenToBlue"
-        onClick={() => handleButtonClick("Binary tree")}
-      >
-        Binary tree
-      </Button>
-      <Button
-        outline
-        gradientDuoTone="purpleToPink"
-        onClick={() => handleButtonClick("Sorting")}
-      >
-        Sorting
-      </Button>
-      <Button
-        outline
-        gradientDuoTone="pinkToOrange"
-        onClick={() => handleButtonClick("Linked Lists")}
-      >
-        Linked Lists
-      </Button>
-      <Button
-        outline
-        gradientDuoTone="tealToLime"
-        onClick={() => handleButtonClick("Algorithms")}
-      >
-        Algorithms
-      </Button>
-      <Button
-        outline
-        gradientDuoTone="redToYellow"
-        onClick={() => handleButtonClick("Graphs")}
-      >
-        Graphs
-      </Button>
     </div>
   );
 }
-
 function ComplexitySelection({ setValue }) {
+  const [selectedComplexity, setSelectedComplexity] = useState(null);
   const handleButtonClick = (complexity) => {
     setValue("complexity", complexity);
+    setSelectedComplexity(complexity);
   };
 
   return (
     <div className="flex flex-wrap gap-2">
       <Button
-        outline
+        className="focus:ring-0 focus:ring-offset-0"
+        outline={selectedComplexity !== "Easy"}
         gradientDuoTone="purpleToBlue"
         onClick={() => handleButtonClick("Easy")}
       >
         Easy
       </Button>
       <Button
-        outline
+        className="focus:ring-0 focus:ring-offset-0"
+        outline={selectedComplexity !== "Medium"}
         gradientDuoTone="cyanToBlue"
         onClick={() => handleButtonClick("Medium")}
       >
         Medium
       </Button>
       <Button
-        outline
+        className="focus:ring-0 focus:ring-offset-0"
+        outline={selectedComplexity !== "Hard"}
         gradientDuoTone="greenToBlue"
         onClick={() => handleButtonClick("Hard")}
       >
@@ -128,8 +94,8 @@ export default function MatchingPage() {
     status: "JOIN",
     userId: "",
     userName: "",
-    category: "",
-    complexity: "",
+    category: "Array",
+    complexity: "Easy",
     matchType: "SAME",
   };
 
@@ -221,18 +187,29 @@ export default function MatchingPage() {
         {!renderMatching && (
           <div className="flex flex-column mt-10 justify-end gap-2">
             {currentStep > 0 && (
-              <Button onClick={() => setCurrentStep(currentStep - 1)}>
+              <Button
+                className="focus:ring-0 focus:ring-offset-0"
+                onClick={() => setCurrentStep(currentStep - 1)}
+              >
                 Back
               </Button>
             )}
             {currentStep !== 2 && (
-              <Button onClick={() => setCurrentStep(currentStep + 1)}>
+              <Button
+                className="focus:ring-0 focus:ring-offset-0"
+                onClick={() => setCurrentStep(currentStep + 1)}
+              >
                 Next
                 <HiOutlineArrowRight className="ml-2 h-5 w-5" />
               </Button>
             )}
             {currentStep === 2 && (
-              <Button onClick={handleSubmit(onSubmit)}>Join Queue</Button>
+              <Button
+                className="focus:ring-0 focus:ring-offset-0"
+                onClick={handleSubmit(onSubmit)}
+              >
+                Join Queue
+              </Button>
             )}
           </div>
         )}
