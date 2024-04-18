@@ -11,10 +11,11 @@ import { useJoinQueue } from "../hooks/api/match/useJoinQueue";
 import { Spinner } from "flowbite-react";
 import { MatchPolling } from "../components/matcher/matchPolling";
 import { useGetFindMatchByUserId } from "../hooks/api/match/useGetFindMatchByUserId";
+import { useGetAllCategoriesData } from "../hooks/api/question/useGetAllCategories";
 import { Stopwatch } from "../components/common/Stopwatch";
 import { toast } from "react-toastify";
 
-function CategorySelection({ setValue }) {
+function CategorySelection({ setValue, allCategoriesData }) {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const handleButtonClick = (category) => {
@@ -22,16 +23,29 @@ function CategorySelection({ setValue }) {
     setSelectedCategory(category);
   };
 
+  const colors = [
+    "purpleToBlue",
+    "cyanToBlue",
+    "greenToBlue",
+    "purpleToPink",
+    "pinkToOrange",
+    "tealToLime",
+    "redToYellow",
+  ];
+
   return (
     <div className="flex flex-wrap gap-2">
-      <Button
-        className="focus:ring-0 focus:ring-offset-0"
-        outline={selectedCategory !== "Array"}
-        gradientDuoTone="purpleToBlue"
-        onClick={() => handleButtonClick("Array")}
-      >
-        Array
-      </Button>
+      {allCategoriesData.data.map((category, index) => (
+        <Button
+          key={category}
+          className="focus:ring-0 focus:ring-offset-0"
+          outline={selectedCategory !== category}
+          gradientDuoTone={colors[index % colors.length]}
+          onClick={() => handleButtonClick(category)}
+        >
+          {category}
+        </Button>
+      ))}
     </div>
   );
 }
@@ -81,6 +95,8 @@ export default function MatchingPage() {
   const userId = user?.userDetails._id;
   const { data: isAlreadyMatched, isLoading: isLoadingFindAlreadyMatched } =
     useGetFindMatchByUserId(userId);
+  const { data: allCategoriesData, isLoading: isLoadingAllCategories } =
+    useGetAllCategoriesData();
 
   // ----------------------------------
   // FORM VALIDATIONS - with ZOD
@@ -168,7 +184,11 @@ export default function MatchingPage() {
         <Stepper currentStep={currentStep} />
         <div className="flex flex-wrap gap-2 mt-10">
           {!renderMatching && currentStep === 0 && (
-            <CategorySelection setValue={setValue} formState={formData} />
+            <CategorySelection
+              setValue={setValue}
+              allCategoriesData={allCategoriesData}
+              formState={formData}
+            />
           )}
           {!renderMatching && currentStep === 1 && (
             <ComplexitySelection setValue={setValue} formState={formData} />

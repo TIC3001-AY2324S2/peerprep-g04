@@ -4,7 +4,7 @@ import {
   findAllQuestions,
   findQuestionById,
   updateQuestion,
-  findQuestionByTitle
+  findQuestionByTitle,
 } from "./repository.js";
 
 export async function ormCreateQuestion(
@@ -93,6 +93,22 @@ export async function ormFindAllQuestions(search = "") {
 
     if (result.length !== 0) {
       return result;
+    }
+    return null;
+  } catch (err) {
+    return { err };
+  }
+}
+
+export async function ormFindAllCategories() {
+  try {
+    const result = await findAllQuestions();
+    if (result.length !== 0) {
+      const categories = [].concat(
+        ...result.map((question) => JSON.parse(question.category))
+      );
+      const uniqueCategories = [...new Set(categories)];
+      return uniqueCategories;
     }
     return null;
   } catch (err) {

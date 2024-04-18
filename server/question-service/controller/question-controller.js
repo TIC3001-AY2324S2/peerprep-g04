@@ -2,6 +2,7 @@ import { ormFindAllQuestions as _findAllQuestions } from "../model/question-orm.
 import { ormCreateQuestion as _createQuestion } from "../model/question-orm.js";
 import { ormDeleteQuestion as _deleteQuestion } from "../model/question-orm.js";
 import { ormUpdateQuestion as _updateQuestion } from "../model/question-orm.js";
+import { ormFindAllCategories as _findAllCategories } from "../model/question-orm.js";
 import { ormFindQuestionById as _findQuestionById } from "../model/question-orm.js";
 
 export async function getQuestions(req, res) {
@@ -11,6 +12,20 @@ export async function getQuestions(req, res) {
     return res.status(404).json({ message: `No questions exist!` });
   } else if (response.err) {
     return res.status(400).json({ message: "Could not find questions!" });
+  } else {
+    return res.status(200).json({
+      data: response,
+    });
+  }
+}
+
+export async function getAllCategories(req, res) {
+  const response = await _findAllCategories();
+
+  if (response === null) {
+    return res.status(204).json({ message: `No categories exist!` });
+  } else if (response.err) {
+    return res.status(204).json({ message: "Could not find categories!" });
   } else {
     return res.status(200).json({
       data: response,

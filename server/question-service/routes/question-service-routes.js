@@ -3,6 +3,7 @@ import {
   getQuestions,
   getQuestionById,
   getPaginatedQuestions,
+  getAllCategories,
   deleteQuestion,
   createQuestion,
   updateQuestion,
@@ -13,6 +14,8 @@ const router = express.Router();
 router.get("/all", getQuestions);
 
 router.get("/find", getQuestionById);
+
+router.get("/categories", getAllCategories);
 
 router.get("/paginatedQuestions", getPaginatedQuestions);
 
