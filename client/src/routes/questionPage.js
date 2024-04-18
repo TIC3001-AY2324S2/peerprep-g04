@@ -104,14 +104,14 @@ export const QuestionPage = () => {
     );
   };
 
-  const cardComponent = (label, description, imageUrl) => {
+  const cardComponent = (label, description, imageUrl, navigatePage) => {
     return (
       <Card
-        href="#"
-        className="max-w-sm mt-10 mb-10"
+        className="max-w-sm mt-10 mb-10 cursor-pointer hover:shadow-xl"
         style={{
           backgroundImage: `url(${imageUrl})`,
         }}
+        onClick={() => navigate(`/${navigatePage}`)}
       >
         <h5 className="text-2xl font-bold tracking-tight text-white">
           {label}
@@ -211,17 +211,20 @@ export const QuestionPage = () => {
         {cardComponent(
           "Match with other users now",
           "In PeerPrep, you can match with other users and work on solutions together!",
-          "https://static.vecteezy.com/system/resources/previews/001/217/210/non_2x/binary-code-background-vector.jpg"
+          "https://static.vecteezy.com/system/resources/previews/001/217/210/non_2x/binary-code-background-vector.jpg",
+          "matching"
         )}
         {cardComponent(
           "Top interview questions",
           "Here are the top questions we have collated by various companies which were used in real interviews.",
-          "https://png.pngtree.com/background/20221206/original/pngtree-digital-futuristic-binary-code-number-background-picture-image_1982388.jpg"
+          "https://png.pngtree.com/background/20221206/original/pngtree-digital-futuristic-binary-code-number-background-picture-image_1982388.jpg",
+          "question"
         )}
         {cardComponent(
           "Top 10 Questions",
           "Try out these top questions favourited by many users.",
-          "https://png.pngtree.com/thumb_back/fh260/background/20190221/ourmid/pngtree-technology-cool-background-code-image_17634.jpg"
+          "https://png.pngtree.com/thumb_back/fh260/background/20190221/ourmid/pngtree-technology-cool-background-code-image_17634.jpg",
+          "question"
         )}
       </div>
       <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
@@ -251,7 +254,7 @@ export const QuestionPage = () => {
         </div>
       </div>
       {/* TABLE */}
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <div className="relative overflow-x-show shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -290,7 +293,16 @@ export const QuestionPage = () => {
                         {item.title}
                       </td>
                     </th>
-                    <td className="px-6 py-4">{item.category}</td>
+                    <td className="px-6 py-4">
+                      {JSON.parse(item.category).map(
+                        (category, index, array) => (
+                          <span key={index}>
+                            {category}
+                            {index !== array.length - 1 && ", "}
+                          </span>
+                        )
+                      )}
+                    </td>
                     <td className="px-6 py-4">{item.complexity}</td>
                     <td className="px-6 py-4">{item.description}</td>
                     <td className="px-6 py-4">{actionButton(item)}</td>

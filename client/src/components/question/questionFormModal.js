@@ -4,6 +4,7 @@ import { useCreateQuestion } from "../../hooks/api/question/useCreateQuestion";
 import { useEditQuestion } from "../../hooks/api/question/useEditQuestion";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useGetAllCategoriesData } from "../../hooks/api/question/useGetAllCategories";
 import CreatableSelect from "react-select/creatable";
 import {
   Button,
@@ -33,11 +34,24 @@ export const QuestionFormModal = ({
   // ----------------------------------
   // FORM SETUP
   // ----------------------------------
+  const initialCategoryForSelectBox =
+    isEdit && selectedQuestion
+      ? JSON.parse(selectedQuestion.category).map((category) => ({
+          value: category,
+          label: category,
+        }))
+      : [];
+
+  const initialCategory =
+    isEdit && selectedQuestion
+      ? JSON.parse(selectedQuestion.category).map((category) => category)
+      : [];
+
   const initialFormValues =
     isEdit && selectedQuestion
       ? {
           title: selectedQuestion.title,
-          category: selectedQuestion.category,
+          category: initialCategory,
           complexity: selectedQuestion.complexity,
           description: selectedQuestion.description,
         }
@@ -62,27 +76,34 @@ export const QuestionFormModal = ({
 
   const watchAllFields = watch();
 
-  const options = [
-    { value: "Array", label: "Array" },
-    { value: "String", label: "String" },
-    { value: "Algorithm", label: "Algorithm" },
-  ];
-
   // ----------------------------------
   // SUBMIT HOOK
   // ----------------------------------
   const { mutateAsync: createQuestion } = useCreateQuestion();
   const { mutateAsync: editQuestion } = useEditQuestion();
+  const { data: allCategoriesData, isLoading: isLoadingAllCategories } =
+    useGetAllCategoriesData();
+
+  const options =
+    (!isLoadingAllCategories &&
+      allCategoriesData?.data.map((category) => ({
+        value: category,
+        label: category,
+      }))) ||
+    [];
 
   const onSubmit = async (data) => {
+    let res = true;
     if (isEdit && selectedQuestion) {
-      await editQuestion({ data, id: selectedQuestion._id });
+      res = await editQuestion({ data, id: selectedQuestion._id });
     } else {
-      await createQuestion(data);
+      res = await createQuestion(data);
     }
-
-    setOpenQuestionFormModal(false);
-    reset();
+    console.log(res);
+    if (res) {
+      setOpenQuestionFormModal(false);
+      reset();
+    }
   };
 
   const onCancel = () => {
@@ -92,6 +113,7 @@ export const QuestionFormModal = ({
   // ----------------------------------
   // RETURN BLOCK
   // ----------------------------------
+
   return (
     <Modal show={show} size="4xl" onClose={onCancel} popup>
       <Modal.Header />
@@ -138,6 +160,7 @@ export const QuestionFormModal = ({
                       options={options}
                       onBlur={onBlur}
                       name={name}
+                      defaultValue={initialCategoryForSelectBox}
                       value={
                         formState.values &&
                         formState.values[name].map((val) =>
@@ -150,7 +173,8 @@ export const QuestionFormModal = ({
                     />
                   )}
                 />
-
+                {/* sample changes */}
+                {/* test */}
                 {errors?.category && (
                   <small className="mt-2 text-sm text-red-600 dark:text-red-500">
                     {errors.category.message}
