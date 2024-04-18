@@ -154,6 +154,7 @@ export default function MatchingPage() {
   }, [user, setValue]);
 
   if (isAlreadyMatched && !isLoadingFindAlreadyMatched) {
+    setShouldRunStopwatch(false);  // Immediately stop the stopwatch
     navigate("/matchDetails");
   }
 
