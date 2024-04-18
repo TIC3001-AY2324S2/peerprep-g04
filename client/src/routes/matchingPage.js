@@ -107,14 +107,14 @@ function ComplexitySelection({ setValue }) {
 }
 
 export default function MatchingPage() {
+  const { user, isLoading } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
   const [renderMatching, setRenderMatching] = useState(false);
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { mutate: joinQueue } = useJoinQueue();
   const userId = user?.userDetails._id;
   const { data: isAlreadyMatched, isLoading: isLoadingFindAlreadyMatched } =
     useGetFindMatchByUserId(userId);
-  const { mutate: joinQueue } = useJoinQueue();
 
   // ----------------------------------
   // FORM VALIDATIONS - with ZOD
@@ -153,10 +153,21 @@ export default function MatchingPage() {
     }
   }, [user, setValue]);
 
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (!isLoading && !user) {
+    return (
+      <div className="w-full max-w-2xl">
+        <Card className="p-4">
+          <h2 className="text-2xl font-bold">You are not logged in</h2>
+          <Button onClick={() => navigate("/auth")}>Log in</Button>
+        </Card>
+      </div>
+    );
+  }
   if (isAlreadyMatched && !isLoadingFindAlreadyMatched) {
-    <Stopwatch
-        stopwatchRunning={false}
-      />
     navigate("/matchDetails");
   }
 
@@ -187,72 +198,60 @@ export default function MatchingPage() {
 
   return (
     <div className="w-full max-w-2xl">
-      {user ? (
-        <div>
-          <Stepper currentStep={currentStep} />
-          <div className="flex flex-wrap gap-2 mt-10">
-            {!renderMatching && currentStep === 0 && (
-              <CategorySelection setValue={setValue} formState={formData} />
-            )}
-            {!renderMatching && currentStep === 1 && (
-              <ComplexitySelection setValue={setValue} formState={formData} />
-            )}
-            {!renderMatching && currentStep === 2 && (
-              <>
-                <div>
-                  <h1>Review your selection</h1>
-                  <h2>Name: {formData.userName}</h2>
-                  <h2>Category: {formData.category}</h2>
-                  <h2>Complexity: {formData.complexity}</h2>
-                </div>
-              </>
-            )}
-          </div>
-          {!renderMatching && (
-            <div className="flex flex-column mt-10 justify-end gap-2">
-              {currentStep > 0 && (
-                <Button onClick={() => setCurrentStep(currentStep - 1)}>
-                  Back
-                </Button>
-              )}
-              {currentStep !== 2 && (
-                <Button onClick={() => setCurrentStep(currentStep + 1)}>
-                  Next
-                  <HiOutlineArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              )}
-              {currentStep === 2 && (
-                <Button onClick={handleSubmit(onSubmit)}>Join Queue</Button>
-              )}
-            </div>
+      <div>
+        <Stepper currentStep={currentStep} />
+        <div className="flex flex-wrap gap-2 mt-10">
+          {!renderMatching && currentStep === 0 && (
+            <CategorySelection setValue={setValue} formState={formData} />
           )}
-          {renderMatching && (
+          {!renderMatching && currentStep === 1 && (
+            <ComplexitySelection setValue={setValue} formState={formData} />
+          )}
+          {!renderMatching && currentStep === 2 && (
             <>
-              <Stopwatch
-                onTimeReached={handleSubmit(() => onLeave(true))}
-                targetTime={30}
-                stopwatchRunning={true}
-              />
-              <MatchPolling
-                userId={user?.userDetails._id}
-                formData={formData}
-              />
-              <div className="flex flex-column mt-10 justify-end gap-2">
-                <Button onClick={handleSubmit(() => onLeave(false))}>
-                  Cancel Matching
-                </Button>
+              <div>
+                <h1>Review your selection</h1>
+                <h2>Name: {formData.userName}</h2>
+                <h2>Category: {formData.category}</h2>
+                <h2>Complexity: {formData.complexity}</h2>
               </div>
             </>
           )}
         </div>
-      ) : (
-        <div>
-          <Card className="p-4">
-            <h2 className="text-2xl font-bold">You are not logged in</h2>
-            <Button onClick={() => navigate("/auth")}>Log in</Button>
-          </Card>
-        </div>
-      )}
+        {!renderMatching && (
+          <div className="flex flex-column mt-10 justify-end gap-2">
+            {currentStep > 0 && (
+              <Button onClick={() => setCurrentStep(currentStep - 1)}>
+                Back
+              </Button>
+            )}
+            {currentStep !== 2 && (
+              <Button onClick={() => setCurrentStep(currentStep + 1)}>
+                Next
+                <HiOutlineArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            )}
+            {currentStep === 2 && (
+              <Button onClick={handleSubmit(onSubmit)}>Join Queue</Button>
+            )}
+          </div>
+        )}
+        {renderMatching && (
+          <>
+            <Stopwatch
+              onTimeReached={handleSubmit(() => onLeave(true))}
+              targetTime={30}
+              stopwatchRunning={true}
+            />
+            <MatchPolling userId={user?.userDetails._id} formData={formData} />
+            <div className="flex flex-column mt-10 justify-end gap-2">
+              <Button onClick={handleSubmit(() => onLeave(false))}>
+                Cancel Matching
+              </Button>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }

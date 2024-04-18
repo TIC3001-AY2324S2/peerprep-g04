@@ -80,10 +80,10 @@ export async function findMatchByUserId(req, res) {
     const { userId } = req.query;
     if (userId) {
       const response = await _findMatchByUserId(userId);
-      if (response === null) {
-        return res.status(404).json({ message: `Could not get Match!` });
-      } else if (response.err) {
-        return res.status(400).json({ message: "error finding match!" });
+      if (response.err) {
+        return res
+          .status(204)
+          .json({ message: `Unable to find match for ${userId}` });
       } else {
         return res.status(200).json({
           data: response,
@@ -93,7 +93,7 @@ export async function findMatchByUserId(req, res) {
   } catch (err) {
     return res
       .status(500)
-      .json({ message: "Database failure when finding Match!" });
+      .json({ message: "Database failure when finding match!" });
   }
 }
 
