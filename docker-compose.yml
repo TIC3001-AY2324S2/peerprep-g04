@@ -12,7 +12,7 @@ services:
     env_file:
       - ./client/.env.local
     environment:
-      ENV: DOCKER
+      ENV: PROD
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -38,7 +38,7 @@ services:
     env_file:
       - ./server/user-service/.env
     environment:
-      ENV: DOCKER
+      ENV: PROD
     depends_on:
       - user_service_mongo_db
 
@@ -58,7 +58,7 @@ services:
     env_file:
       - ./server/question-service/.env
     environment:
-      ENV: DOCKER
+      ENV: PROD
     depends_on:
       - question_service_mongo_db
 
@@ -78,7 +78,7 @@ services:
     env_file:
       - ./server/matching-service/.env
     environment:
-      ENV: DOCKER
+      ENV: PROD
     depends_on:
       - matching_service_mongo_db
       - rabbitmq

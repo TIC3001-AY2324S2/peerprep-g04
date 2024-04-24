@@ -5,36 +5,52 @@ import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import { javascript } from "@codemirror/lang-javascript";
 import io from "socket.io-client";
 
-const CollabCodeEditor = () => {
+const HomeEditor = () => {
   const [userCode, setUserCode] = useState("// Type your code here");
   const [codeResult, setCodeResult] = useState("");
   const [room, setRoom] = useState("test");
   const [joinedRoom, setJoinedRoom] = useState(false);
 
+  const socket = useRef(null);
+
+  useEffect(() => {
+    socket.current = io.connect(
+      `${process.env.REACT_APP_COLLABORATION_API_URL}`
+    );
+    return () => {
+      if (socket.current) {
+        socket.current.disconnect();
+      }
+    };
+  }, []);
+
   const handleEditorChange = (value) => {
     setUserCode(value);
-    socket.emit("send_code", { code: value, room: room });
+    if (socket.current) {
+      socket.current.emit("send_code", { code: value, room: room });
+    }
   };
 
-  const socket = useRef(io.connect("http://localhost:3004")).current;
-
   const joinRoom = () => {
-    socket.emit("join_room", "test");
+    if (socket.current) {
+      socket.current.emit("join_room", "test");
+      socket.current.on("receive_code", (data) => {
+        setUserCode(data.code);
+      });
+    }
     setJoinedRoom(true);
     alert("Joined room: test");
   };
 
   const leaveRoom = () => {
-    socket.emit("leave_room", "test");
+    if (socket.current) {
+      socket.current.emit("leave_room", "test");
+      socket.current.off("send_code");
+      socket.current.off("receive_code");
+    }
     setJoinedRoom(false);
     alert("Left room: test");
   };
-
-  useEffect(() => {
-    socket.on("receive_code", (data) => {
-      setUserCode(data.code);
-    });
-  }, [socket]);
 
   const executeCode = () => {
     try {
@@ -77,4 +93,4 @@ const CollabCodeEditor = () => {
   );
 };
 
-export default CollabCodeEditor;
+export default HomeEditor;

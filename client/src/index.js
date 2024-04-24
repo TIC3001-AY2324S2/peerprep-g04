@@ -12,6 +12,7 @@ import QuestionDetailsPage from "./routes/questionDetailsPage";
 import MatchingPage from "./routes/matchingPage";
 import { MatchFoundDetails } from "./components/matcher/matchFoundDetails";
 import UserPage from "./routes/userPage";
+import CollaborationRoomPage from "./routes/collaborationRoomPage";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
       {
         path: "/question/:id",
         element: <QuestionDetailsPage />,
+      },
+      {
+        path: "/collaboration_room",
+        element: <CollaborationRoomPage />,
       },
       {
         path: "/profile",

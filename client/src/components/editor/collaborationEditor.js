@@ -5,23 +5,35 @@ import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import { javascript } from "@codemirror/lang-javascript";
 import io from "socket.io-client";
 
-const CollabCodeEditor = () => {
+const CollaborationEditor = ({ roomKey = "" }) => {
   const [userCode, setUserCode] = useState("// Type your code here");
   const [codeResult, setCodeResult] = useState("");
-  const [room, setRoom] = useState("test");
+  const [room, setRoom] = useState(roomKey);
   const [joinedRoom, setJoinedRoom] = useState(false);
 
   const socket = useRef(null);
 
   useEffect(() => {
-    socket.current = io.connect("http://localhost:3004");
+    socket.current = io.connect(
+      `${process.env.REACT_APP_COLLABORATION_API_URL}`
+    );
+
+    const roomToJoin = room !== "" ? room : "default_room";
+
+    if (socket.current) {
+      socket.current.emit("join_room", roomToJoin);
+      socket.current.on("receive_code", (data) => {
+        setUserCode(data.code);
+      });
+    }
+    setJoinedRoom(true);
 
     return () => {
       if (socket.current) {
         socket.current.disconnect();
       }
     };
-  }, []);
+  }, [room]);
 
   const handleEditorChange = (value) => {
     setUserCode(value);
@@ -30,25 +42,14 @@ const CollabCodeEditor = () => {
     }
   };
 
-  const joinRoom = () => {
-    if (socket.current) {
-      socket.current.emit("join_room", "test");
-      socket.current.on("receive_code", (data) => {
-        setUserCode(data.code);
-      });
-    }
-    setJoinedRoom(true);
-    alert("Joined room: test");
-  };
-
   const leaveRoom = () => {
     if (socket.current) {
-      socket.current.emit("leave_room", "test");
+      socket.current.emit("leave_room", room);
       socket.current.off("send_code");
       socket.current.off("receive_code");
     }
     setJoinedRoom(false);
-    alert("Left room: test");
+    alert(`Left room: ${room}`);
   };
 
   const executeCode = () => {
@@ -65,6 +66,7 @@ const CollabCodeEditor = () => {
 
   return (
     <div className="overlay rounded-md overflow-show w-full h-full shadow-4xl">
+      <pre>{room}</pre>
       <CodeMirror
         style={{ fontSize: "12px" }}
         value={userCode}
@@ -74,13 +76,9 @@ const CollabCodeEditor = () => {
         onChange={handleEditorChange}
       />
       <div className="flex flex-row gap-2 justify-end">
-        {joinedRoom ? (
+        {joinedRoom && (
           <Button onClick={leaveRoom} className="mt-2">
-            Leave test room
-          </Button>
-        ) : (
-          <Button onClick={joinRoom} className="mt-2">
-            Join test room
+            Leave room
           </Button>
         )}
         <Button onClick={executeCode} className="mt-2">
@@ -92,4 +90,4 @@ const CollabCodeEditor = () => {
   );
 };
 
-export default CollabCodeEditor;
+export default CollaborationEditor;
