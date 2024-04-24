@@ -1,36 +1,36 @@
-import React, { useState, useEffect } from "react";
-import { Button, Card } from "flowbite-react";
-import { Stepper } from "../components/matcher/stepper";
-import { HiOutlineArrowRight } from "react-icons/hi";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuth } from "../components/common/AuthProvider";
-import { useNavigate } from "react-router-dom";
-import { useJoinQueue } from "../hooks/api/match/useJoinQueue";
-import { Spinner } from "flowbite-react";
-import { MatchPolling } from "../components/matcher/matchPolling";
-import { useGetFindMatchByUserId } from "../hooks/api/match/useGetFindMatchByUserId";
-import { useGetAllCategoriesData } from "../hooks/api/question/useGetAllCategories";
-import { Stopwatch } from "../components/common/Stopwatch";
-import { toast } from "react-toastify";
+import React, { useState, useEffect } from 'react';
+import { Button, Card } from 'flowbite-react';
+import { Stepper } from '../components/matcher/stepper';
+import { HiOutlineArrowRight } from 'react-icons/hi';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useAuth } from '../components/common/AuthProvider';
+import { useNavigate } from 'react-router-dom';
+import { useJoinQueue } from '../hooks/api/match/useJoinQueue';
+import { Spinner } from 'flowbite-react';
+import { MatchPolling } from '../components/matcher/matchPolling';
+import { useGetFindMatchByUserId } from '../hooks/api/match/useGetFindMatchByUserId';
+import { useGetAllCategoriesData } from '../hooks/api/question/useGetAllCategories';
+import { Stopwatch } from '../components/common/Stopwatch';
+import { toast } from 'react-toastify';
 
 function CategorySelection({ setValue, allCategoriesData }) {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const handleButtonClick = (category) => {
-    setValue("category", category);
+    setValue('category', category);
     setSelectedCategory(category);
   };
 
   const colors = [
-    "purpleToBlue",
-    "cyanToBlue",
-    "greenToBlue",
-    "purpleToPink",
-    "pinkToOrange",
-    "tealToLime",
-    "redToYellow",
+    'purpleToBlue',
+    'cyanToBlue',
+    'greenToBlue',
+    'purpleToPink',
+    'pinkToOrange',
+    'tealToLime',
+    'redToYellow',
   ];
 
   return (
@@ -52,7 +52,7 @@ function CategorySelection({ setValue, allCategoriesData }) {
 function ComplexitySelection({ setValue }) {
   const [selectedComplexity, setSelectedComplexity] = useState(null);
   const handleButtonClick = (complexity) => {
-    setValue("complexity", complexity);
+    setValue('complexity', complexity);
     setSelectedComplexity(complexity);
   };
 
@@ -60,25 +60,25 @@ function ComplexitySelection({ setValue }) {
     <div className="flex flex-wrap gap-2">
       <Button
         className="focus:ring-0 focus:ring-offset-0"
-        outline={selectedComplexity !== "Easy"}
+        outline={selectedComplexity !== 'Easy'}
         gradientDuoTone="purpleToBlue"
-        onClick={() => handleButtonClick("Easy")}
+        onClick={() => handleButtonClick('Easy')}
       >
         Easy
       </Button>
       <Button
         className="focus:ring-0 focus:ring-offset-0"
-        outline={selectedComplexity !== "Medium"}
+        outline={selectedComplexity !== 'Medium'}
         gradientDuoTone="cyanToBlue"
-        onClick={() => handleButtonClick("Medium")}
+        onClick={() => handleButtonClick('Medium')}
       >
         Medium
       </Button>
       <Button
         className="focus:ring-0 focus:ring-offset-0"
-        outline={selectedComplexity !== "Hard"}
+        outline={selectedComplexity !== 'Hard'}
         gradientDuoTone="greenToBlue"
-        onClick={() => handleButtonClick("Hard")}
+        onClick={() => handleButtonClick('Hard')}
       >
         Hard
       </Button>
@@ -102,17 +102,17 @@ export default function MatchingPage() {
   // FORM VALIDATIONS - with ZOD
   // ----------------------------------
   const schema = z.object({
-    category: z.string().min(1, "Please enter a category"),
-    complexity: z.string().min(1, "Please select a complexity"),
+    category: z.string().min(1, 'Please enter a category'),
+    complexity: z.string().min(1, 'Please select a complexity'),
   });
 
   const initialFormValues = {
-    status: "JOIN",
-    userId: "",
-    userName: "",
-    category: "Array",
-    complexity: "Easy",
-    matchType: "SAME",
+    status: 'JOIN',
+    userId: '',
+    userName: '',
+    category: 'Array',
+    complexity: 'Easy',
+    matchType: 'SAME',
   };
 
   const {
@@ -130,8 +130,8 @@ export default function MatchingPage() {
 
   useEffect(() => {
     if (user) {
-      setValue("userId", user?.userDetails._id);
-      setValue("userName", user?.userDetails.username);
+      setValue('userId', user?.userDetails._id);
+      setValue('userName', user?.userDetails.username);
     }
   }, [user, setValue]);
 
@@ -139,23 +139,24 @@ export default function MatchingPage() {
     return <Spinner />;
   }
 
+  if (!!isAlreadyMatched && !isLoadingFindAlreadyMatched) {
+    navigate('/matchDetails');
+  }
+
   if (!isLoading && !user) {
     return (
       <div className="w-full max-w-2xl">
         <Card className="p-4">
           <h2 className="text-2xl font-bold">You are not logged in</h2>
-          <Button onClick={() => navigate("/auth")}>Log in</Button>
+          <Button onClick={() => navigate('/auth')}>Log in</Button>
         </Card>
       </div>
     );
   }
-  if (isAlreadyMatched && !isLoadingFindAlreadyMatched) {
-    navigate("/matchDetails");
-  }
 
   const onSubmit = () => {
     const data = getValues();
-    toast.success("Joined Queue.", {
+    toast.success('Joined Queue.', {
       autoClose: 500, // 5 seconds
     });
     joinQueue({ data: data });
@@ -164,13 +165,13 @@ export default function MatchingPage() {
 
   const onLeave = (isTimeout = false) => {
     const data = getValues();
-    data.status = "LEAVE";
+    data.status = 'LEAVE';
     if (!isTimeout) {
-      toast.info("Left queue.", {
+      toast.info('Left queue.', {
         autoClose: 500, // 5 seconds
       });
     } else {
-      toast.error("Matching timed out. Leaving queue.", {
+      toast.error('Matching timed out. Leaving queue.', {
         autoClose: 500, // 5 seconds
       });
     }

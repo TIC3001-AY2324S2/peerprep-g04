@@ -1,5 +1,5 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
 
 export const useGetFindMatchByUserId = (userId) => {
   const queryClient = useQueryClient();
@@ -13,9 +13,15 @@ export const useGetFindMatchByUserId = (userId) => {
     return data;
   };
 
-  return useQuery({
-    queryKey: ["getFindMatchByUserId", userId],
+  const queryInfo = useQuery({
+    queryKey: ['getFindMatchByUserId', userId],
     queryFn: getFindMatchByUserId,
     cacheTime: 0,
   });
+
+  return {
+    ...queryInfo,
+    refetch: () =>
+      queryClient.invalidateQueries(['getFindMatchByUserId', userId]),
+  };
 };
