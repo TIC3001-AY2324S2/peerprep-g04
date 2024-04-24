@@ -83,7 +83,28 @@ services:
       - matching_service_mongo_db
       - rabbitmq
 
+  collaboration_service_mongo_db:
+    image: mongo:latest
+    container_name: collaboration_service_database
+    restart: always
+    volumes:
+      - collaboration_service_mongo_db:/data/db
+
+  collaboration_service:
+    build: ./server/collaboration-service
+    container_name: collaboration_service
+    restart: always
+    ports: 
+      - 3004:3004
+    env_file:
+      - ./server/collaboration-service/.env
+    environment:
+      ENV: DOCKER
+    depends_on:
+      - collaboration_service_mongo_db
+
 volumes:
   user_service_mongo_db: {}
   question_service_mongo_db: {}
   matching_service_mongo_db: {}
+  collaboration_service_mongo_db: {}
