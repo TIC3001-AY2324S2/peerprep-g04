@@ -28,7 +28,9 @@ io.on("connection", (socket) => {
 
   socket.on("send_code", (data) => {
     console.log(data);
-    socket.to(data.room).emit("receive_code", data);
+    if (socket.rooms.has(data.room)) {
+      socket.to(data.room).emit("receive_code", data);
+    }
   });
 });
 
