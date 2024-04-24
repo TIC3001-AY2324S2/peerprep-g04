@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { useGetQuestionById } from "../hooks/api/question/useGetQuestionById";
-import { useGetFindMatchByUserId } from "../hooks/api/match/useGetFindMatchByUserId";
-import { useDeleteMatch } from "../hooks/api/match/useDeleteMatch";
-import { useAuth } from "../components/common/AuthProvider";
-import CollaborationEditor from "../components/editor/collaborationEditor";
-import { Alert } from "flowbite-react";
+import React, { useState, useEffect } from 'react';
+import { useGetQuestionById } from '../hooks/api/question/useGetQuestionById';
+import { useGetFindMatchByUserId } from '../hooks/api/match/useGetFindMatchByUserId';
+import { useDeleteMatch } from '../hooks/api/match/useDeleteMatch';
+import { useAuth } from '../components/common/AuthProvider';
+import CollaborationEditor from '../components/editor/collaborationEditor';
+import { Alert } from 'flowbite-react';
 
 export function renderMatchedBanner(currUser, userMatchData) {
-  let matchedUser = "";
+  let matchedUser = '';
 
   const currUserNmae = currUser?.username;
 
@@ -18,53 +18,57 @@ export function renderMatchedBanner(currUser, userMatchData) {
   }
 
   return (
-    <Alert color="success" onDismiss={() => alert("Alert dismissed!")}>
+    <Alert color="success" onDismiss={() => alert('Alert dismissed!')}>
       <span className="font-medium">
         Successfully Matched with {matchedUser}!
-      </span>{" "}
+      </span>{' '}
       Start coding with your partner now!
     </Alert>
   );
 }
 
-export default function CollaborationRoomPage(roomkey = "") {
+export default function CollaborationRoomPage(roomkey = '') {
   const { user } = useAuth();
   const userId = user?.userDetails._id;
   const { data: userMatchDetails, isLoading: isUserMatchDetailsLoading } =
     useGetFindMatchByUserId(user?.userDetails._id);
-  const { mutateAsync: deleteMatch } = useDeleteMatch(userId);
 
   const { data, isLoading: isQuestionDataLoading } = useGetQuestionById({
-    id: "662160050ae49a9c29a1a900", // change this to list of questions
+    id: '662160050ae49a9c29a1a900', // change this to list of questions
   });
+
+  useEffect(() => {
+    // Store the room state in localStorage whenever it changes
+    localStorage.setItem('room', userMatchDetails?.data.roomKey);
+  }, [userMatchDetails]);
 
   const [markdownVisible, setMarkdownVisible] = useState(true);
 
   const toggleMakeCodeEditorEnlarged = () => {
-    const firstDiv = document.getElementById("first");
-    const secondDiv = document.getElementById("second");
+    const firstDiv = document.getElementById('first');
+    const secondDiv = document.getElementById('second');
 
     setMarkdownVisible(!markdownVisible);
 
-    firstDiv.classList.toggle("w-1/2");
-    firstDiv.classList.toggle("w-1/20");
+    firstDiv.classList.toggle('w-1/2');
+    firstDiv.classList.toggle('w-1/20');
 
-    secondDiv.classList.toggle("w-1/2");
-    secondDiv.classList.toggle("w-full");
+    secondDiv.classList.toggle('w-1/2');
+    secondDiv.classList.toggle('w-full');
   };
 
   // Function to split description based on keyword
   const splitDescription = (description) => {
     const keywords = [
-      "input:",
-      "e.g.",
-      "E.g.",
-      "Input:",
-      "Example:",
-      "example:",
+      'input:',
+      'e.g.',
+      'E.g.',
+      'Input:',
+      'Example:',
+      'example:',
     ];
     let index = -1;
-    let keywordFound = "";
+    let keywordFound = '';
 
     // Find the index of the first keyword occurring in the description
     for (const kw of keywords) {
@@ -85,18 +89,18 @@ export default function CollaborationRoomPage(roomkey = "") {
     }
 
     // If no keyword found, return original description
-    return [description, ""];
+    return [description, ''];
   };
 
   // Render the description
   const renderDescription = (description) => {
     let [firstHalf, secondHalf] = splitDescription(description);
-    if (firstHalf.endsWith(",")) {
+    if (firstHalf.endsWith(',')) {
       firstHalf = firstHalf.slice(0, -1);
-      firstHalf = firstHalf + ".";
+      firstHalf = firstHalf + '.';
     }
 
-    const answerKeywords = ["output:", "Output:", "Answer:", "answer:"];
+    const answerKeywords = ['output:', 'Output:', 'Answer:', 'answer:'];
 
     let answerKeywordFound = false;
     let indexOfAnsKw;
@@ -143,7 +147,7 @@ export default function CollaborationRoomPage(roomkey = "") {
   };
 
   return (
-    <div className="w-full h-full" style={{ width: "90%" }}>
+    <div className="w-full h-full" style={{ width: '90%' }}>
       {renderMatchedBanner(user?.userDetails, userMatchDetails?.data)}
       <div className="flex flex-row p-8 h-full">
         {!isQuestionDataLoading && !isUserMatchDetailsLoading ? (
@@ -175,7 +179,7 @@ export default function CollaborationRoomPage(roomkey = "") {
           <div>Loading...</div>
         )}
         <div className="w-1/2 m-2" id="second">
-          <CollaborationEditor roomKey={userMatchDetails?.data.roomKey} />
+          <CollaborationEditor />
         </div>
       </div>
     </div>

@@ -90,13 +90,13 @@ export default function MatchingPage() {
   const { user, isLoading } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
   const [renderMatching, setRenderMatching] = useState(false);
-  const navigate = useNavigate();
   const { mutate: joinQueue } = useJoinQueue();
   const userId = user?.userDetails._id;
   const { data: isAlreadyMatched, isLoading: isLoadingFindAlreadyMatched } =
     useGetFindMatchByUserId(userId);
   const { data: allCategoriesData, isLoading: isLoadingAllCategories } =
     useGetAllCategoriesData();
+  const navigate = useNavigate();
 
   // ----------------------------------
   // FORM VALIDATIONS - with ZOD
@@ -133,14 +133,14 @@ export default function MatchingPage() {
       setValue('userId', user?.userDetails._id);
       setValue('userName', user?.userDetails.username);
     }
-  }, [user, setValue]);
+
+    if (!!isAlreadyMatched && !isLoadingFindAlreadyMatched) {
+      navigate('/matchDetails');
+    }
+  }, [user, setValue, isAlreadyMatched, isLoadingFindAlreadyMatched, navigate]);
 
   if (isLoading) {
     return <Spinner />;
-  }
-
-  if (!!isAlreadyMatched && !isLoadingFindAlreadyMatched) {
-    navigate('/matchDetails');
   }
 
   if (!isLoading && !user) {
