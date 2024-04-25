@@ -57,9 +57,7 @@ export const searchForMatch = async (
     const requestingUserComplexity = JSON.parse(
       requestingUserData.content
     ).complexity;
-    const category = JSON.parse(
-      requestingUserData.content
-    ).category.toUpperCase();
+    const category = JSON.parse(requestingUserData.content).category;
     const requestingUserName = JSON.parse(requestingUserData.content).userName;
 
     if (userQueue.size > 1) {

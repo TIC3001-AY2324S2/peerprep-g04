@@ -1,10 +1,14 @@
 import amqp from "amqplib/callback_api.js";
 import { searchForMatch } from "./matcher.js";
 // Declare usersInQueueMap outside of the function
-let usersInQueueMap = new Map();
+let usersInQueuesMap = {};
 const amqpUrl = process.env.AMQP_URL;
 
 const consumeFromQueue = async (queueName, callback) => {
+  if (!usersInQueuesMap[queueName]) {
+    usersInQueuesMap[queueName] = new Map();
+  }
+
   amqp.connect(amqpUrl, function (err, connection) {
     if (err) {
       throw err;
@@ -22,10 +26,16 @@ const consumeFromQueue = async (queueName, callback) => {
           const message = JSON.parse(msg.content);
           let isMatched = false;
 
+          // Use the map for this queue
+          let usersInQueueMap = usersInQueuesMap[queueName];
+
           if (message.status.toUpperCase() === "JOIN") {
             // Add to the map msg.content.userId as key and the value is the msg
-            usersInQueueMap.set(message.userId, msg);
 
+            usersInQueueMap.set(message.userId, msg);
+            console.log(`Current users in queue ${queueName}: `, [
+              ...usersInQueueMap.keys(),
+            ]);
             channel.ack(msg);
 
             usersInQueueMap.size > 0 &&

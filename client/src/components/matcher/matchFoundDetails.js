@@ -1,11 +1,11 @@
-import { useEffect, useRef } from 'react';
-import { useGetFindMatchByUserId } from '../../hooks/api/match/useGetFindMatchByUserId';
-import { useAuth } from '../common/AuthProvider';
-import { Spinner } from 'flowbite-react';
-import { Avatar } from 'flowbite-react';
-import { Button } from 'flowbite-react';
-import { useNavigate } from 'react-router-dom';
-import { useDeleteMatch } from '../../hooks/api/match/useDeleteMatch';
+import { useEffect, useRef } from "react";
+import { useGetFindMatchByUserId } from "../../hooks/api/match/useGetFindMatchByUserId";
+import { useAuth } from "../common/AuthProvider";
+import { Spinner } from "flowbite-react";
+import { Avatar } from "flowbite-react";
+import { useNavigate } from "react-router-dom";
+import { useDeleteMatch } from "../../hooks/api/match/useDeleteMatch";
+import { Button, Badge } from "flowbite-react";
 
 export const MatchFoundDetails = () => {
   const { user } = useAuth();
@@ -31,18 +31,18 @@ export const MatchFoundDetails = () => {
   };
 
   const joinRoom = () => {
-    navigate('/collaboration_room');
+    navigate("/collaboration_room");
   };
 
   if (!isLoading && !data) {
-    navigate('/matching');
+    navigate("/matching");
   } else if (isLoading) {
     return <Spinner />;
   }
 
   const handleDelete = async () => {
     await deleteMatch(data?.data._id);
-    navigate('/');
+    navigate("/");
   };
 
   return (
@@ -51,15 +51,16 @@ export const MatchFoundDetails = () => {
         <Spinner />
       ) : (
         <>
-          <h1>Match Found</h1>
           <div className="flex flex-row justify-between gap-10">
             {renderUserCard(data?.data?.userOneName)}
             {renderUserCard(data?.data?.userTwoName)}
           </div>
-          <h2>Room Key: {data?.data?.roomKey}</h2>
-          <h2>Complexity: {data?.data?.complexity}</h2>
-          <Button onClick={joinRoom}>Enter Room</Button>
-          <Button onClick={handleDelete}>Leave Match</Button>
+          <Badge>Room Key: {data?.data?.roomKey}</Badge>
+          <Badge>Complexity: {data?.data?.complexity}</Badge>
+          <div className="flex flex-row justify-end gap-2">
+            <Button onClick={joinRoom}>Enter Room</Button>
+            <Button onClick={handleDelete}>Leave Match</Button>
+          </div>
         </>
       )}
     </div>
